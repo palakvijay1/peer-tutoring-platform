@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PeerLearn</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f4ff; min-height: 100vh; }
+
+        nav {
+            background: #1a1a2e; padding: 1rem 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { color: #7c6af7; font-size: 1.4rem; font-weight: 700; }
+        .nav-links { display: flex; gap: 0.75rem; }
+        .nav-btn {
+            background: none; border: 1.5px solid #7c6af7; color: #7c6af7;
+            padding: 0.4rem 1.1rem; border-radius: 8px; cursor: pointer; font-size: 0.88rem;
+        }
+        .nav-btn:hover, .nav-btn.active { background: #7c6af7; color: white; }
+        .nav-btn.danger { border-color: #e24b4a; color: #e24b4a; }
+        .nav-btn.danger:hover { background: #e24b4a; color: white; }
+
+        .page { display: none; padding: 2rem; max-width: 860px; margin: 0 auto; }
+        .page.active { display: block; }
+
+        .card {
+            background: white; border-radius: 16px; padding: 2rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07); margin-bottom: 1.5rem;
+        }
+        .card h2 { font-size: 1.25rem; margin-bottom: 1.5rem; color: #1a1a2e; }
+
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; font-size: 0.83rem; color: #555; margin-bottom: 0.35rem; font-weight: 500; }
+        input, select, textarea {
+            width: 100%; padding: 0.65rem 1rem; border: 1.5px solid #ddd;
+            border-radius: 10px; font-size: 0.93rem; font-family: inherit; transition: border 0.2s;
+        }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #7c6af7; }
+        textarea { min-height: 100px; resize: vertical; }
+
+        .btn {
+            padding: 0.72rem 1.5rem; border-radius: 10px; border: none;
+            font-size: 0.93rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-full { width: 100%; margin-top: 0.5rem; }
+        .btn-primary { background: #7c6af7; color: white; }
+        .btn-primary:hover { background: #6555e0; }
+        .btn-secondary { background: #f0f4ff; color: #7c6af7; border: 1.5px solid #7c6af7; }
+
+        .alert {
+            padding: 0.75rem 1rem; border-radius: 10px; margin-bottom: 1rem;
+            font-size: 0.88rem; display: none;
+        }
+        .alert.show { display: block; }
+        .alert.success { background: #eaf3de; color: #3b6d11; border: 1px solid #97c459; }
+        .alert.error { background: #fcebeb; color: #a32d2d; border: 1px solid #f09595; }
+
+        .hero { text-align: center; padding: 5rem 2rem; }
+        .hero h1 { font-size: 2.4rem; color: #1a1a2e; margin-bottom: 1rem; }
+        .hero h1 span { color: #7c6af7; }
+        .hero p { color: #666; font-size: 1.05rem; margin-bottom: 2rem; }
+        .hero-btns { display: flex; gap: 1rem; justify-content: center; }
+        .hero-btns .btn { padding: 0.75rem 2rem; }
+
+        .switch-text { text-align: center; margin-top: 1rem; font-size: 0.88rem; color: #666; }
+        .switch-text a { color: #7c6af7; cursor: pointer; font-weight: 600; }
+
+        .profile-bar {
+            background: white; border-radius: 14px; padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .avatar {
+            width: 46px; height: 46px; border-radius: 50%; background: #7c6af7;
+            color: white; display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 1.1rem; flex-shrink: 0;
+        }
+        .profile-info h3 { font-size: 0.98rem; }
+        .profile-info p { font-size: 0.82rem; color: #888; }
+        .role-badge {
+            margin-left: auto; background: #eeedfe; color: #534ab7;
+            padding: 0.35rem 1rem; border-radius: 20px; font-size: 0.82rem; font-weight: 600;
+        }
+
+        .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .tab {
+            padding: 0.5rem 1.2rem; border-radius: 8px; border: 1.5px solid #ddd;
+            background: white; cursor: pointer; font-size: 0.88rem; transition: all 0.2s;
+        }
+        .tab.active { background: #7c6af7; color: white; border-color: #7c6af7; }
+
+        .filter-row { display: flex; gap: 0.75rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+        .filter-row select { flex: 1; min-width: 140px; }
+
+        .q-card {
+            background: white; border-radius: 14px; padding: 1.2rem 1.5rem;
+            margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-left: 4px solid #7c6af7;
+        }
+        .q-card.ANSWERED { border-left-color: #1d9e75; }
+        .q-card.VERIFIED { border-left-color: #ef9f27; }
+        .q-text { font-size: 0.97rem; color: #1a1a2e; margin-bottom: 0.75rem; line-height: 1.55; }
+        .q-meta { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
+
+        .badge { padding: 0.22rem 0.7rem; border-radius: 20px; font-size: 0.76rem; font-weight: 600; }
+        .badge-sub { background: #eeedfe; color: #534ab7; }
+        .badge-PENDING { background: #e6f1fb; color: #185fa5; }
+        .badge-ANSWERED { background: #e1f5ee; color: #0f6e56; }
+        .badge-VERIFIED { background: #faeeda; color: #854f0b; }
+
+        .q-date { font-size: 0.78rem; color: #bbb; margin-left: auto; }
+        .empty { text-align: center; padding: 3rem; color: #bbb; font-size: 0.95rem; }
+        .spinner { text-align: center; padding: 2rem; color: #7c6af7; font-size: 0.93rem; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">PeerLearn</div>
+    <div class="nav-links" id="navLinks">
+        <button class="nav-btn active" onclick="showPage('home')">Home</button>
+        <button class="nav-btn" onclick="showPage('login')">Login</button>
+        <button class="nav-btn" onclick="showPage('signup')">Sign Up</button>
+    </div>
+</nav>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+    <div class="hero">
+        <h1>Learn Better with <span>Peer Tutoring</span></h1>
+        <p>Post academic questions, get answers from peers, and book tutoring sessions.</p>
+        <div class="hero-btns">
+            <button class="btn btn-primary" onclick="showPage('signup')">Get Started</button>
+            <button class="btn btn-secondary" onclick="showPage('login')">Login</button>
+        </div>
+    </div>
+</div>
+
+<!-- SIGNUP -->
+<div class="page" id="page-signup">
+    <div class="card" style="max-width:460px;margin:2rem auto;">
+        <h2>Create Account</h2>
+        <div class="alert" id="signupAlert"></div>
+        <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="signupName" placeholder="Your full name">
+        </div>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="signupEmail" placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="signupPassword" placeholder="Min 6 characters">
+        </div>
+        <button class="btn btn-primary btn-full" onclick="signup()">Create Account</button>
+        <div class="switch-text">Already have an account? <a onclick="showPage('login')">Login</a></div>
+    </div>
+</div>
+
+<!-- LOGIN -->
+<div class="page" id="page-login">
+    <div class="card" style="max-width:460px;margin:2rem auto;">
+        <h2>Welcome Back</h2>
+        <div class="alert" id="loginAlert"></div>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="loginEmail" placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="loginPassword" placeholder="Your password">
+        </div>
+        <button class="btn btn-primary btn-full" onclick="login()">Login</button>
+        <div class="switch-text">Don't have an account? <a onclick="showPage('signup')">Sign Up</a></div>
+    </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="page" id="page-dashboard">
+    <div class="profile-bar">
+        <div class="avatar" id="avatarText">?</div>
+        <div class="profile-info">
+            <h3 id="profileName">-</h3>
+            <p id="profileEmail">-</p>
+        </div>
+        <div class="role-badge" id="roleBadge">STUDENT</div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" id="tab-btn-feed" onclick="switchTab('feed')">All Questions</button>
+        <button class="tab" id="tab-btn-my" onclick="switchTab('my')">My Questions</button>
+        <button class="tab" id="tab-btn-post" onclick="switchTab('post')">Post Question</button>
+    </div>
+
+    <!-- ALL QUESTIONS -->
+    <div id="tab-feed">
+        <div class="filter-row">
+            <select id="subjectFilter" onchange="loadFeed()">
+                <option value="">All Subjects</option>
+            </select>
+            <select id="sortFilter" onchange="loadFeed()">
+                <option value="newest">Newest First</option>
+                <option value="subject">By Subject</option>
+                <option value="status">By Status</option>
+            </select>
+        </div>
+        <div id="feedList"><div class="spinner">Loading...</div></div>
+    </div>
+
+    <!-- MY QUESTIONS -->
+    <div id="tab-my" style="display:none;">
+        <div id="myList"><div class="spinner">Loading...</div></div>
+    </div>
+
+    <!-- POST QUESTION -->
+    <div id="tab-post" style="display:none;">
+        <div class="card">
+            <h2>Post a Question</h2>
+            <div class="alert" id="postAlert"></div>
+            <div class="form-group">
+                <label>Your Question</label>
+                <textarea id="qText" placeholder="Describe your question in detail..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Subject</label>
+                <select id="qSubject"><option value="">Select subject</option></select>
+            </div>
+            <button class="btn btn-primary btn-full" onclick="postQuestion()">Post Question</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const API = 'http://localhost:8080/api';
+let token = null;
+let currentUser = null;
+
+// ── Navigation ────────────────────────────────────────────────
+function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+}
+
+function setNav(loggedIn) {
+    const nav = document.getElementById('navLinks');
+    if (loggedIn) {
+        nav.innerHTML = `
+            <button class="nav-btn active" onclick="showPage('dashboard')">Dashboard</button>
+            <button class="nav-btn danger" onclick="logout()">Logout</button>`;
+    } else {
+        nav.innerHTML = `
+            <button class="nav-btn active" onclick="showPage('home')">Home</button>
+            <button class="nav-btn" onclick="showPage('login')">Login</button>
+            <button class="nav-btn" onclick="showPage('signup')">Sign Up</button>`;
+    }
+}
+
+function showAlert(id, msg, type) {
+    const el = document.getElementById(id);
+    el.textContent = msg;
+    el.className = 'alert show ' + type;
+    setTimeout(() => el.classList.remove('show'), 4000);
+}
+
+// ── Auth ──────────────────────────────────────────────────────
+async function signup() {
+    const name = document.getElementById('signupName').value.trim();
+    const email = document.getElementById('signupEmail').value.trim();
+    const password = document.getElementById('signupPassword').value;
+
+    if (!name || !email || !password) {
+        return showAlert('signupAlert', 'Please fill in all fields.', 'error');
+    }
+    if (password.length < 6) {
+        return showAlert('signupAlert', 'Password must be at least 6 characters.', 'error');
+    }
+
+    try {
+        const res = await fetch(`${API}/auth/signup`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password })
+        });
+        const data = await res.json();
+        if (data.success) {
+            token = data.data.token;
+            currentUser = data.data;
+            setProfile();
+            setNav(true);
+            loadSubjects();
+            loadFeed();
+            showPage('dashboard');
+        } else {
+            showAlert('signupAlert', data.message || 'Signup failed.', 'error');
+        }
+    } catch (e) {
+        showAlert('signupAlert', 'Cannot connect to server. Make sure Spring Boot is running.', 'error');
+    }
+}
+
+async function login() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+
+    if (!email || !password) {
+        return showAlert('loginAlert', 'Please fill in all fields.', 'error');
+    }
+
+    try {
+        const res = await fetch(`${API}/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (data.success) {
+            token = data.data.token;
+            currentUser = data.data;
+            setProfile();
+            setNav(true);
+            loadSubjects();
+            loadFeed();
+            showPage('dashboard');
+        } else {
+            showAlert('loginAlert', data.message || 'Invalid credentials.', 'error');
+        }
+    } catch (e) {
+        showAlert('loginAlert', 'Cannot connect to server. Make sure Spring Boot is running.', 'error');
+    }
+}
+
+function logout() {
+    token = null;
+    currentUser = null;
+    setNav(false);
+    showPage('home');
+}
+
+// ── Profile ───────────────────────────────────────────────────
+function setProfile() {
+    document.getElementById('profileName').textContent = currentUser.name;
+    document.getElementById('profileEmail').textContent = currentUser.email;
+    document.getElementById('roleBadge').textContent = currentUser.role;
+    document.getElementById('avatarText').textContent = currentUser.name.charAt(0).toUpperCase();
+}
+
+// ── Tabs ──────────────────────────────────────────────────────
+function switchTab(name) {
+    ['feed', 'my', 'post'].forEach(t => {
+        document.getElementById('tab-' + t).style.display = 'none';
+        document.getElementById('tab-btn-' + t).classList.remove('active');
+    });
+    document.getElementById('tab-' + name).style.display = 'block';
+    document.getElementById('tab-btn-' + name).classList.add('active');
+    if (name === 'my') loadMyQuestions();
+    if (name === 'feed') loadFeed();
+}
+
+// ── Subjects ──────────────────────────────────────────────────
+async function loadSubjects() {
+    try {
+        const res = await fetch(`${API}/questions/subjects`, {
+            headers: { 'X-User-Email': currentUser.email }
+        });
+        const data = await res.json();
+        if (data.success) {
+            const subjects = data.data;
+            const filterEl = document.getElementById('subjectFilter');
+            const postEl = document.getElementById('qSubject');
+            subjects.forEach(s => {
+                filterEl.innerHTML += `<option value="${s}">${s.replace(/_/g,' ')}</option>`;
+                postEl.innerHTML += `<option value="${s}">${s.replace(/_/g,' ')}</option>`;
+            });
+        }
+    } catch (e) {}
+}
+
+// ── Feed ──────────────────────────────────────────────────────
+async function loadFeed() {
+    const subject = document.getElementById('subjectFilter').value;
+    const sort = document.getElementById('sortFilter').value;
+    const list = document.getElementById('feedList');
+    list.innerHTML = '<div class="spinner">Loading...</div>';
+
+    try {
+        let url = `${API}/questions?sortBy=${sort}`;
+        if (subject) url = `${API}/questions/subject/${subject}`;
+
+        const res = await fetch(url, {
+            headers: { 'X-User-Email': currentUser.email }
+        });
+        const data = await res.json();
+        if (data.success) renderQuestions(data.data, 'feedList');
+        else list.innerHTML = '<div class="empty">Could not load questions.</div>';
+    } catch (e) {
+        list.innerHTML = '<div class="empty">Could not connect to server.</div>';
+    }
+}
+
+// ── My Questions ──────────────────────────────────────────────
+async function loadMyQuestions() {
+    const list = document.getElementById('myList');
+    list.innerHTML = '<div class="spinner">Loading...</div>';
+
+    try {
+        const res = await fetch(`${API}/questions/my`, {
+            headers: { 'X-User-Email': currentUser.email }
+        });
+        const data = await res.json();
+        if (data.success) renderQuestions(data.data, 'myList');
+        else list.innerHTML = '<div class="empty">No questions found.</div>';
+    } catch (e) {
+        list.innerHTML = '<div class="empty">Could not connect to server.</div>';
+    }
+}
+
+// ── Post Question ─────────────────────────────────────────────
+async function postQuestion() {
+    const text = document.getElementById('qText').value.trim();
+    const subject = document.getElementById('qSubject').value;
+
+    if (!text || !subject) {
+        return showAlert('postAlert', 'Please fill in all fields.', 'error');
+    }
+    if (text.length < 10) {
+        return showAlert('postAlert', 'Question must be at least 10 characters.', 'error');
+    }
+
+    try {
+        const res = await fetch(`${API}/questions`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-User-Email': currentUser.email
+            },
+            body: JSON.stringify({ text, subject })
+        });
+        const data = await res.json();
+        if (data.success) {
+            showAlert('postAlert', 'Question posted successfully!', 'success');
+            document.getElementById('qText').value = '';
+            document.getElementById('qSubject').value = '';
+            setTimeout(() => switchTab('my'), 1200);
+        } else {
+            showAlert('postAlert', data.message || 'Failed to post question.', 'error');
+        }
+    } catch (e) {
+        showAlert('postAlert', 'Cannot connect to server.', 'error');
+    }
+}
+
+// ── Render Questions ──────────────────────────────────────────
+function renderQuestions(questions, containerId) {
+    const el = document.getElementById(containerId);
+    if (!questions || questions.length === 0) {
+        el.innerHTML = '<div class="empty">No questions found.</div>';
+        return;
+    }
+    el.innerHTML = questions.map(q => `
+        <div class="q-card ${q.status}">
+            <div class="q-text">${q.text}</div>
+            <div class="q-meta">
+                <span class="badge badge-sub">${q.subject.replace(/_/g,' ')}</span>
+                <span class="badge badge-${q.status}">${q.status}</span>
+                <span style="font-size:0.8rem;color:#aaa;">by ${q.postedBy.name}</span>
+                <span class="q-date">${new Date(q.createdAt).toLocaleDateString()}</span>
+            </div>
+        </div>
+    `).join('');
+}
+</script>
+</body>
+</html>
