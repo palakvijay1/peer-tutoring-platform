@@ -22,7 +22,7 @@
         .nav-btn.danger { border-color: #e24b4a; color: #e24b4a; }
         .nav-btn.danger:hover { background: #e24b4a; color: white; }
 
-        .page { display: none; padding: 2rem; max-width: 860px; margin: 0 auto; }
+        .page { display: none; padding: 2rem; max-width: 900px; margin: 0 auto; }
         .page.active { display: block; }
 
         .card {
@@ -48,6 +48,18 @@
         .btn-primary { background: #7c6af7; color: white; }
         .btn-primary:hover { background: #6555e0; }
         .btn-secondary { background: #f0f4ff; color: #7c6af7; border: 1.5px solid #7c6af7; }
+        .btn-delete {
+            background: none; border: 1.5px solid #e24b4a; color: #e24b4a;
+            padding: 0.3rem 0.9rem; border-radius: 8px; cursor: pointer;
+            font-size: 0.78rem; font-weight: 600; transition: all 0.2s;
+        }
+        .btn-delete:hover { background: #e24b4a; color: white; }
+        .btn-verify {
+            background: #1d9e75; color: white; border: none;
+            padding: 0.3rem 0.9rem; border-radius: 8px; cursor: pointer;
+            font-size: 0.78rem; font-weight: 600; transition: all 0.2s;
+        }
+        .btn-verify:hover { background: #157a5a; }
 
         .alert {
             padding: 0.75rem 1rem; border-radius: 10px; margin-bottom: 1rem;
@@ -83,6 +95,11 @@
             margin-left: auto; background: #eeedfe; color: #534ab7;
             padding: 0.35rem 1rem; border-radius: 20px; font-size: 0.82rem; font-weight: 600;
         }
+        .role-badge.faculty { background: #faeeda; color: #854f0b; }
+        .points-badge {
+            background: #e1f5ee; color: #0f6e56;
+            padding: 0.35rem 1rem; border-radius: 20px; font-size: 0.82rem; font-weight: 600;
+        }
 
         .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
         .tab {
@@ -94,25 +111,61 @@
         .filter-row { display: flex; gap: 0.75rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
         .filter-row select { flex: 1; min-width: 140px; }
 
+        /* Question card */
         .q-card {
             background: white; border-radius: 14px; padding: 1.2rem 1.5rem;
             margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             border-left: 4px solid #7c6af7;
         }
-        .q-card.ANSWERED { border-left-color: #1d9e75; }
-        .q-card.VERIFIED { border-left-color: #ef9f27; }
+        .q-card.VERIFIED { border-left-color: #1d9e75; }
         .q-text { font-size: 0.97rem; color: #1a1a2e; margin-bottom: 0.75rem; line-height: 1.55; }
-        .q-meta { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
+        .q-meta { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.5rem; }
+        .q-actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; flex-wrap: wrap; align-items: center; }
+
+        /* Answer section under question */
+        .answer-section {
+            margin-top: 1rem; padding-top: 1rem;
+            border-top: 1px solid #f0f0f0;
+        }
+        .answer-section h4 { font-size: 0.85rem; color: #888; margin-bottom: 0.6rem; }
+        .verified-answer {
+            background: #e1f5ee; border-radius: 10px; padding: 0.8rem 1rem;
+            border-left: 3px solid #1d9e75;
+        }
+        .verified-answer p { font-size: 0.92rem; color: #1a1a2e; line-height: 1.5; }
+        .verified-answer .ans-meta { font-size: 0.78rem; color: #888; margin-top: 0.4rem; }
+
+        /* Answer form inline */
+        .answer-form { margin-top: 0.75rem; display: none; }
+        .answer-form textarea { min-height: 70px; margin-bottom: 0.5rem; }
+
+        /* Faculty answer list */
+        .faculty-answer-item {
+            background: #f8f8ff; border-radius: 10px; padding: 0.8rem 1rem;
+            margin-bottom: 0.6rem; border-left: 3px solid #ddd;
+        }
+        .faculty-answer-item.verified-item { border-left-color: #1d9e75; background: #e1f5ee; }
+        .faculty-answer-item p { font-size: 0.92rem; color: #1a1a2e; }
+        .faculty-answer-item .ans-meta { font-size: 0.78rem; color: #888; margin-top: 0.3rem; display: flex; justify-content: space-between; align-items: center; }
 
         .badge { padding: 0.22rem 0.7rem; border-radius: 20px; font-size: 0.76rem; font-weight: 600; }
         .badge-sub { background: #eeedfe; color: #534ab7; }
-        .badge-PENDING { background: #e6f1fb; color: #185fa5; }
-        .badge-ANSWERED { background: #e1f5ee; color: #0f6e56; }
-        .badge-VERIFIED { background: #faeeda; color: #854f0b; }
+        .badge-Pending { background: #e6f1fb; color: #185fa5; }
+        .badge-Answered { background: #e1f5ee; color: #0f6e56; }
 
         .q-date { font-size: 0.78rem; color: #bbb; margin-left: auto; }
         .empty { text-align: center; padding: 3rem; color: #bbb; font-size: 0.95rem; }
         .spinner { text-align: center; padding: 2rem; color: #7c6af7; font-size: 0.93rem; }
+
+        /* My answers tab */
+        .my-answer-card {
+            background: white; border-radius: 14px; padding: 1.2rem 1.5rem;
+            margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-left: 4px solid #7c6af7;
+        }
+        .my-answer-card.verified-ans { border-left-color: #1d9e75; }
+        .question-ref { font-size: 0.8rem; color: #888; margin-bottom: 0.4rem; }
+        .answer-text { font-size: 0.95rem; color: #1a1a2e; line-height: 1.5; margin-bottom: 0.5rem; }
     </style>
 </head>
 <body>
@@ -155,6 +208,13 @@
             <label>Password</label>
             <input type="password" id="signupPassword" placeholder="Min 6 characters">
         </div>
+        <div class="form-group">
+            <label>Role</label>
+            <select id="signupRole">
+                <option value="STUDENT">Student</option>
+                <option value="FACULTY">Faculty</option>
+            </select>
+        </div>
         <button class="btn btn-primary btn-full" onclick="signup()">Create Account</button>
         <div class="switch-text">Already have an account? <a onclick="showPage('login')">Login</a></div>
     </div>
@@ -178,7 +238,7 @@
     </div>
 </div>
 
-<!-- DASHBOARD -->
+<!-- STUDENT DASHBOARD -->
 <div class="page" id="page-dashboard">
     <div class="profile-bar">
         <div class="avatar" id="avatarText">?</div>
@@ -186,16 +246,18 @@
             <h3 id="profileName">-</h3>
             <p id="profileEmail">-</p>
         </div>
+        <span class="points-badge" id="pointsBadge">⭐ 0 pts</span>
         <div class="role-badge" id="roleBadge">STUDENT</div>
     </div>
 
     <div class="tabs">
         <button class="tab active" id="tab-btn-feed" onclick="switchTab('feed')">All Questions</button>
         <button class="tab" id="tab-btn-my" onclick="switchTab('my')">My Questions</button>
+        <button class="tab" id="tab-btn-myanswers" onclick="switchTab('myanswers')">My Answers</button>
         <button class="tab" id="tab-btn-post" onclick="switchTab('post')">Post Question</button>
     </div>
 
-    <!-- ALL QUESTIONS -->
+    <!-- ALL QUESTIONS FEED -->
     <div id="tab-feed">
         <div class="filter-row">
             <select id="subjectFilter" onchange="loadFeed()">
@@ -213,6 +275,11 @@
     <!-- MY QUESTIONS -->
     <div id="tab-my" style="display:none;">
         <div id="myList"><div class="spinner">Loading...</div></div>
+    </div>
+
+    <!-- MY ANSWERS -->
+    <div id="tab-myanswers" style="display:none;">
+        <div id="myAnswersList"><div class="spinner">Loading...</div></div>
     </div>
 
     <!-- POST QUESTION -->
@@ -233,22 +300,36 @@
     </div>
 </div>
 
+<!-- FACULTY DASHBOARD -->
+<div class="page" id="page-faculty">
+    <div class="profile-bar">
+        <div class="avatar" id="facultyAvatarText">?</div>
+        <div class="profile-info">
+            <h3 id="facultyProfileName">-</h3>
+            <p id="facultyProfileEmail">-</p>
+        </div>
+        <div class="role-badge faculty">FACULTY</div>
+    </div>
+
+    <h3 style="margin-bottom:1rem;color:#1a1a2e;">Questions Awaiting Verification</h3>
+    <div id="facultyFeedList"><div class="spinner">Loading...</div></div>
+</div>
+
 <script>
-const API = 'http://localhost:8080/api';
-let token = null;
+const API = 'http://localhost:8082/api';
 let currentUser = null;
 
-// ── Navigation ────────────────────────────────────────────────
+// ── Navigation ─────────────────────────────────────────────────────────────
 function showPage(name) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-' + name).classList.add('active');
 }
 
-function setNav(loggedIn) {
+function setNav(loggedIn, role) {
     const nav = document.getElementById('navLinks');
     if (loggedIn) {
         nav.innerHTML = `
-            <button class="nav-btn active" onclick="showPage('dashboard')">Dashboard</button>
+            <button class="nav-btn active" onclick="showPage('${role === 'FACULTY' ? 'faculty' : 'dashboard'}')">Dashboard</button>
             <button class="nav-btn danger" onclick="logout()">Logout</button>`;
     } else {
         nav.innerHTML = `
@@ -265,39 +346,31 @@ function showAlert(id, msg, type) {
     setTimeout(() => el.classList.remove('show'), 4000);
 }
 
-// ── Auth ──────────────────────────────────────────────────────
+// ── Auth ───────────────────────────────────────────────────────────────────
 async function signup() {
     const name = document.getElementById('signupName').value.trim();
     const email = document.getElementById('signupEmail').value.trim();
     const password = document.getElementById('signupPassword').value;
+    const role = document.getElementById('signupRole').value;
 
-    if (!name || !email || !password) {
-        return showAlert('signupAlert', 'Please fill in all fields.', 'error');
-    }
-    if (password.length < 6) {
-        return showAlert('signupAlert', 'Password must be at least 6 characters.', 'error');
-    }
+    if (!name || !email || !password) return showAlert('signupAlert', 'Please fill in all fields.', 'error');
+    if (password.length < 6) return showAlert('signupAlert', 'Password must be at least 6 characters.', 'error');
 
     try {
         const res = await fetch(`${API}/auth/signup`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, password })
+            body: JSON.stringify({ name, email, password, role })
         });
         const data = await res.json();
         if (data.success) {
-            token = data.data.token;
             currentUser = data.data;
-            setProfile();
-            setNav(true);
-            loadSubjects();
-            loadFeed();
-            showPage('dashboard');
+            afterLogin();
         } else {
             showAlert('signupAlert', data.message || 'Signup failed.', 'error');
         }
     } catch (e) {
-        showAlert('signupAlert', 'Cannot connect to server. Make sure Spring Boot is running.', 'error');
+        showAlert('signupAlert', 'Cannot connect to server.', 'error');
     }
 }
 
@@ -305,9 +378,7 @@ async function login() {
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
 
-    if (!email || !password) {
-        return showAlert('loginAlert', 'Please fill in all fields.', 'error');
-    }
+    if (!email || !password) return showAlert('loginAlert', 'Please fill in all fields.', 'error');
 
     try {
         const res = await fetch(`${API}/auth/login`, {
@@ -317,39 +388,45 @@ async function login() {
         });
         const data = await res.json();
         if (data.success) {
-            token = data.data.token;
             currentUser = data.data;
-            setProfile();
-            setNav(true);
-            loadSubjects();
-            loadFeed();
-            showPage('dashboard');
+            afterLogin();
         } else {
             showAlert('loginAlert', data.message || 'Invalid credentials.', 'error');
         }
     } catch (e) {
-        showAlert('loginAlert', 'Cannot connect to server. Make sure Spring Boot is running.', 'error');
+        showAlert('loginAlert', 'Cannot connect to server.', 'error');
+    }
+}
+
+function afterLogin() {
+    setNav(true, currentUser.role);
+    if (currentUser.role === 'FACULTY') {
+        document.getElementById('facultyAvatarText').textContent = currentUser.name.charAt(0).toUpperCase();
+        document.getElementById('facultyProfileName').textContent = currentUser.name;
+        document.getElementById('facultyProfileEmail').textContent = currentUser.email;
+        loadFacultyFeed();
+        showPage('faculty');
+    } else {
+        document.getElementById('profileName').textContent = currentUser.name;
+        document.getElementById('profileEmail').textContent = currentUser.email;
+        document.getElementById('roleBadge').textContent = currentUser.role;
+        document.getElementById('avatarText').textContent = currentUser.name.charAt(0).toUpperCase();
+        document.getElementById('pointsBadge').textContent = `⭐ ${currentUser.points || 0} pts`;
+        loadSubjects();
+        loadFeed();
+        showPage('dashboard');
     }
 }
 
 function logout() {
-    token = null;
     currentUser = null;
     setNav(false);
     showPage('home');
 }
 
-// ── Profile ───────────────────────────────────────────────────
-function setProfile() {
-    document.getElementById('profileName').textContent = currentUser.name;
-    document.getElementById('profileEmail').textContent = currentUser.email;
-    document.getElementById('roleBadge').textContent = currentUser.role;
-    document.getElementById('avatarText').textContent = currentUser.name.charAt(0).toUpperCase();
-}
-
-// ── Tabs ──────────────────────────────────────────────────────
+// ── Tabs ───────────────────────────────────────────────────────────────────
 function switchTab(name) {
-    ['feed', 'my', 'post'].forEach(t => {
+    ['feed', 'my', 'myanswers', 'post'].forEach(t => {
         document.getElementById('tab-' + t).style.display = 'none';
         document.getElementById('tab-btn-' + t).classList.remove('active');
     });
@@ -357,9 +434,10 @@ function switchTab(name) {
     document.getElementById('tab-btn-' + name).classList.add('active');
     if (name === 'my') loadMyQuestions();
     if (name === 'feed') loadFeed();
+    if (name === 'myanswers') loadMyAnswers();
 }
 
-// ── Subjects ──────────────────────────────────────────────────
+// ── Subjects ───────────────────────────────────────────────────────────────
 async function loadSubjects() {
     try {
         const res = await fetch(`${API}/questions/subjects`, {
@@ -378,64 +456,79 @@ async function loadSubjects() {
     } catch (e) {}
 }
 
-// ── Feed ──────────────────────────────────────────────────────
+// ── Feed (Student) ─────────────────────────────────────────────────────────
 async function loadFeed() {
     const subject = document.getElementById('subjectFilter').value;
     const sort = document.getElementById('sortFilter').value;
     const list = document.getElementById('feedList');
     list.innerHTML = '<div class="spinner">Loading...</div>';
-
     try {
         let url = `${API}/questions?sortBy=${sort}`;
         if (subject) url = `${API}/questions/subject/${subject}`;
-
-        const res = await fetch(url, {
-            headers: { 'X-User-Email': currentUser.email }
-        });
+        const res = await fetch(url, { headers: { 'X-User-Email': currentUser.email } });
         const data = await res.json();
-        if (data.success) renderQuestions(data.data, 'feedList');
+        if (data.success) renderStudentQuestions(data.data, 'feedList');
         else list.innerHTML = '<div class="empty">Could not load questions.</div>';
     } catch (e) {
         list.innerHTML = '<div class="empty">Could not connect to server.</div>';
     }
 }
 
-// ── My Questions ──────────────────────────────────────────────
+// ── My Questions ───────────────────────────────────────────────────────────
 async function loadMyQuestions() {
     const list = document.getElementById('myList');
     list.innerHTML = '<div class="spinner">Loading...</div>';
-
     try {
         const res = await fetch(`${API}/questions/my`, {
             headers: { 'X-User-Email': currentUser.email }
         });
         const data = await res.json();
-        if (data.success) renderQuestions(data.data, 'myList');
+        if (data.success) renderStudentQuestions(data.data, 'myList');
         else list.innerHTML = '<div class="empty">No questions found.</div>';
     } catch (e) {
         list.innerHTML = '<div class="empty">Could not connect to server.</div>';
     }
 }
 
-// ── Post Question ─────────────────────────────────────────────
+// ── My Answers ─────────────────────────────────────────────────────────────
+async function loadMyAnswers() {
+    const list = document.getElementById('myAnswersList');
+    list.innerHTML = '<div class="spinner">Loading...</div>';
+    try {
+        const res = await fetch(`${API}/answers/my`, {
+            headers: { 'X-User-Email': currentUser.email }
+        });
+        const data = await res.json();
+        if (data.success && data.data.length > 0) {
+            list.innerHTML = data.data.map(a => `
+                <div class="my-answer-card ${a.verified ? 'verified-ans' : ''}">
+                    <div class="answer-text">${a.text}</div>
+                    <div class="q-meta">
+                        <span class="badge ${a.verified ? 'badge-Answered' : 'badge-Pending'}">
+                            ${a.verified ? '✅ Verified' : '⏳ Awaiting Verification'}
+                        </span>
+                        <span class="q-date">${new Date(a.createdAt).toLocaleDateString()}</span>
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            list.innerHTML = '<div class="empty">You have not submitted any answers yet.</div>';
+        }
+    } catch (e) {
+        list.innerHTML = '<div class="empty">Could not connect to server.</div>';
+    }
+}
+
+// ── Post Question ──────────────────────────────────────────────────────────
 async function postQuestion() {
     const text = document.getElementById('qText').value.trim();
     const subject = document.getElementById('qSubject').value;
-
-    if (!text || !subject) {
-        return showAlert('postAlert', 'Please fill in all fields.', 'error');
-    }
-    if (text.length < 10) {
-        return showAlert('postAlert', 'Question must be at least 10 characters.', 'error');
-    }
-
+    if (!text || !subject) return showAlert('postAlert', 'Please fill in all fields.', 'error');
+    if (text.length < 10) return showAlert('postAlert', 'Question must be at least 10 characters.', 'error');
     try {
         const res = await fetch(`${API}/questions`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-User-Email': currentUser.email
-            },
+            headers: { 'Content-Type': 'application/json', 'X-User-Email': currentUser.email },
             body: JSON.stringify({ text, subject })
         });
         const data = await res.json();
@@ -452,22 +545,207 @@ async function postQuestion() {
     }
 }
 
-// ── Render Questions ──────────────────────────────────────────
-function renderQuestions(questions, containerId) {
+// ── Delete Question ────────────────────────────────────────────────────────
+async function deleteQuestion(questionId) {
+    if (!confirm('Are you sure you want to delete this question?')) return;
+    try {
+        const res = await fetch(`${API}/questions/${questionId}`, {
+            method: 'DELETE',
+            headers: { 'X-User-Email': currentUser.email }
+        });
+        const data = await res.json();
+        if (data.success) loadMyQuestions();
+        else alert('Error: ' + data.message);
+    } catch (e) {
+        alert('Something went wrong. Please try again.');
+    }
+}
+
+// ── Submit Answer ──────────────────────────────────────────────────────────
+function toggleAnswerForm(questionId) {
+    const form = document.getElementById('answerForm-' + questionId);
+    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+}
+
+async function submitAnswer(questionId) {
+    const textarea = document.getElementById('answerText-' + questionId);
+    const text = textarea.value.trim();
+    if (!text || text.length < 5) return alert('Please write a proper answer (min 5 characters).');
+    try {
+        const res = await fetch(`${API}/answers/${questionId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-User-Email': currentUser.email },
+            body: JSON.stringify({ text })
+        });
+        const data = await res.json();
+        if (data.success) {
+            alert('Answer submitted! It will be visible once verified by faculty.');
+            textarea.value = '';
+            toggleAnswerForm(questionId);
+            loadFeed(); // refresh to show updated status
+        } else {
+            alert('Error: ' + data.message);
+        }
+    } catch (e) {
+        alert('Something went wrong. Please try again.');
+    }
+}
+
+// ── Render Questions (Student View) ───────────────────────────────────────
+function renderStudentQuestions(questions, containerId) {
     const el = document.getElementById(containerId);
     if (!questions || questions.length === 0) {
         el.innerHTML = '<div class="empty">No questions found.</div>';
         return;
     }
+
+    el.innerHTML = questions.map(q => {
+        const isOwner = currentUser && q.postedBy.email === currentUser.email;
+        const isFeed = containerId === 'feedList';
+
+        // Delete button — only on owner's questions
+        const deleteBtn = isOwner
+            ? `<button class="btn-delete" onclick="deleteQuestion(${q.id})">🗑 Delete</button>`
+            : '';
+
+        // Answer button — show only in feed, only if not the owner
+        const answerBtn = (isFeed && !isOwner)
+            ? `<button class="btn btn-secondary" style="padding:0.3rem 0.9rem;font-size:0.78rem;"
+                onclick="toggleAnswerForm(${q.id})">✏️ Answer</button>`
+            : '';
+
+        // Inline answer form
+        const answerForm = (isFeed && !isOwner) ? `
+            <div class="answer-form" id="answerForm-${q.id}">
+                <textarea id="answerText-${q.id}" placeholder="Write your answer here..."></textarea>
+                <button class="btn btn-primary" style="padding:0.4rem 1rem;font-size:0.85rem;"
+                    onclick="submitAnswer(${q.id})">Submit Answer</button>
+            </div>` : '';
+
+        // Verified answer section — shown if question is VERIFIED
+        const verifiedSection = q.verifiedAnswer ? `
+            <div class="answer-section">
+                <h4>✅ Verified Answer</h4>
+                <div class="verified-answer">
+                    <p>${q.verifiedAnswer.text}</p>
+                    <div class="ans-meta">by ${q.verifiedAnswer.submittedBy.name} · ${new Date(q.verifiedAnswer.createdAt).toLocaleDateString()}</div>
+                </div>
+            </div>` : '';
+
+        return `
+        <div class="q-card ${q.status}">
+            <div class="q-text">${q.text}</div>
+            <div class="q-meta">
+                <span class="badge badge-sub">${q.subject.replace(/_/g,' ')}</span>
+                <span class="badge badge-${q.displayStatus}">${q.displayStatus}</span>
+                <span style="font-size:0.8rem;color:#aaa;">by ${q.postedBy.name}</span>
+                <span class="q-date">${new Date(q.createdAt).toLocaleDateString()}</span>
+            </div>
+            <div class="q-actions">
+                ${answerBtn}
+                ${deleteBtn}
+            </div>
+            ${answerForm}
+            ${verifiedSection}
+        </div>`;
+    }).join('');
+}
+
+// ── Faculty Feed ───────────────────────────────────────────────────────────
+async function loadFacultyFeed() {
+    const list = document.getElementById('facultyFeedList');
+    list.innerHTML = '<div class="spinner">Loading...</div>';
+    try {
+        const res = await fetch(`${API}/questions?sortBy=newest`, {
+            headers: { 'X-User-Email': currentUser.email }
+        });
+        const data = await res.json();
+        if (data.success) renderFacultyQuestions(data.data);
+        else list.innerHTML = '<div class="empty">Could not load questions.</div>';
+    } catch (e) {
+        list.innerHTML = '<div class="empty">Could not connect to server.</div>';
+    }
+}
+
+async function loadAnswersForFaculty(questionId) {
+    const container = document.getElementById('facultyAnswers-' + questionId);
+    container.innerHTML = '<div class="spinner" style="padding:0.5rem;">Loading answers...</div>';
+    try {
+        const res = await fetch(`${API}/answers/${questionId}`, {
+            headers: { 'X-User-Email': currentUser.email }
+        });
+        const data = await res.json();
+        if (data.success && data.data.length > 0) {
+            container.innerHTML = data.data.map(a => `
+                <div class="faculty-answer-item ${a.verified ? 'verified-item' : ''}">
+                    <p>${a.text}</p>
+                    <div class="ans-meta">
+                        <span>by ${a.submittedBy.name} · ${new Date(a.createdAt).toLocaleDateString()}
+                            ${a.verified ? ' · <strong style="color:#1d9e75">✅ Verified</strong>' : ''}
+                        </span>
+                        ${!a.verified ? `<button class="btn-verify" onclick="verifyAnswer(${questionId}, ${a.id})">✅ Verify</button>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            container.innerHTML = '<div style="font-size:0.85rem;color:#aaa;padding:0.5rem;">No answers yet.</div>';
+        }
+    } catch (e) {
+        container.innerHTML = '<div style="color:red;font-size:0.85rem;">Could not load answers.</div>';
+    }
+}
+
+function toggleFacultyAnswers(questionId) {
+    const container = document.getElementById('facultyAnswers-' + questionId);
+    if (container.style.display === 'none') {
+        container.style.display = 'block';
+        loadAnswersForFaculty(questionId);
+    } else {
+        container.style.display = 'none';
+    }
+}
+
+async function verifyAnswer(questionId, answerId) {
+    if (!confirm('Mark this as the verified answer?')) return;
+    try {
+        const res = await fetch(`${API}/answers/${questionId}/verify`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-User-Email': currentUser.email },
+            body: JSON.stringify({ answerId })
+        });
+        const data = await res.json();
+        if (data.success) {
+            alert('Answer verified! Student has been awarded 10 points.');
+            loadFacultyFeed(); // refresh faculty view
+        } else {
+            alert('Error: ' + data.message);
+        }
+    } catch (e) {
+        alert('Something went wrong. Please try again.');
+    }
+}
+
+function renderFacultyQuestions(questions) {
+    const el = document.getElementById('facultyFeedList');
+    if (!questions || questions.length === 0) {
+        el.innerHTML = '<div class="empty">No questions found.</div>';
+        return;
+    }
+    // Faculty sees all questions — they click to expand and see answers
     el.innerHTML = questions.map(q => `
         <div class="q-card ${q.status}">
             <div class="q-text">${q.text}</div>
             <div class="q-meta">
                 <span class="badge badge-sub">${q.subject.replace(/_/g,' ')}</span>
-                <span class="badge badge-${q.status}">${q.status}</span>
+                <span class="badge badge-${q.displayStatus}">${q.displayStatus}</span>
                 <span style="font-size:0.8rem;color:#aaa;">by ${q.postedBy.name}</span>
                 <span class="q-date">${new Date(q.createdAt).toLocaleDateString()}</span>
             </div>
+            <div class="q-actions">
+                <button class="btn btn-secondary" style="padding:0.3rem 0.9rem;font-size:0.78rem;"
+                    onclick="toggleFacultyAnswers(${q.id})">👁 View / Verify Answers</button>
+            </div>
+            <div id="facultyAnswers-${q.id}" style="display:none;margin-top:0.75rem;"></div>
         </div>
     `).join('');
 }

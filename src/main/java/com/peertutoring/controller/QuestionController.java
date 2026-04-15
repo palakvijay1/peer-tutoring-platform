@@ -57,4 +57,14 @@ public class QuestionController {
         List<QuestionResponse> questions = questionService.getQuestionsBySubject(subject);
         return ResponseEntity.ok(ApiResponse.ok("Questions for subject!", questions));
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteQuestion(
+            @PathVariable Long id,
+            @RequestHeader("X-User-Email") String email) {
+ 
+        questionService.deleteQuestion(id, email);
+ 
+        return ResponseEntity.ok(
+                ApiResponse.ok("Question deleted successfully!", null));
+    }
 }
