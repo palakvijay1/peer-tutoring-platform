@@ -2,22 +2,23 @@ package com.peertutoring.dto;
 
 import com.peertutoring.model.Answer;
 import com.peertutoring.model.Question;
+import com.peertutoring.model.TutorProfile;
+import com.peertutoring.model.TutoringSession;
 import com.peertutoring.model.User;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import java.time.LocalDateTime;
 
 /**
- * DTOs (Data Transfer Objects) for Epic 1 + Epic 2.
- *
  * ══════════════════════════════════════════════════════════════
- * SOLID — Interface Segregation Principle (ISP):
- * Instead of one bloated request/response class, we define lean,
- * purpose-specific DTOs so clients only deal with the fields
- * they actually need.
+ * All DTOs for EPIC 1 + EPIC 2 + EPIC 3
  *
- * CREATIONAL — Builder Pattern (via Lombok @Builder):
- * All DTOs use @Builder for clean construction in service layer.
+ * SOLID — Interface Segregation Principle (ISP):
+ *   Each DTO has only the fields needed for that specific operation.
+ *   No bloated "god" request/response objects.
+ *
+ * CREATIONAL — Builder Pattern (Lombok @Builder):
+ *   All DTOs use @Builder for clean, readable construction in services.
  * ══════════════════════════════════════════════════════════════
  */
 public class Dtos {
@@ -37,9 +38,7 @@ public class Dtos {
         @Size(min = 6, message = "Password must be at least 6 characters")
         private String password;
 
-        // Role field — optional, defaults to STUDENT if not provided
-        // Faculty can signup by passing role = "FACULTY"
-        private String role;
+        private String role; // optional, defaults to STUDENT
     }
 
     @Data @NoArgsConstructor @AllArgsConstructor @Builder
@@ -103,19 +102,10 @@ public class Dtos {
         private String text;
         private String subject;
         private String status;
-
-        // UI label — maps internal status to what student sees
-        // PENDING   → "Pending"
-        // ANSWERED  → "Pending"  (answers exist but not verified yet)
-        // VERIFIED  → "Answered" (faculty verified, correct answer visible)
         private String displayStatus;
-
         private UserResponse postedBy;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
-
-        // The verified answer (only present when status = VERIFIED)
-        // null means no verified answer yet — UI hides answer section
         private AnswerResponse verifiedAnswer;
 
         public static QuestionResponse from(Question question) {
@@ -124,25 +114,14 @@ public class Dtos {
                     .text(question.getText())
                     .subject(question.getSubject().name())
                     .status(question.getStatus().name())
-                    // Map internal state to UI label
                     .displayStatus(toDisplayStatus(question.getStatus()))
                     .postedBy(UserResponse.from(question.getPostedBy()))
                     .createdAt(question.getCreatedAt())
                     .updatedAt(question.getUpdatedAt())
-                    .verifiedAnswer(null) // service sets this separately
+                    .verifiedAnswer(null)
                     .build();
         }
 
-        /**
-         * Maps internal QuestionStatus to what the UI should display.
-         *
-         * SOLID — OCP: If we add a new internal state later,
-         * we only update this method — nothing else changes.
-         *
-         * PENDING  → "Pending"  (no answers yet)
-         * ANSWERED → "Pending"  (answers exist, faculty hasn't verified)
-         * VERIFIED → "Answered" (faculty verified a correct answer)
-         */
         private static String toDisplayStatus(Question.QuestionStatus status) {
             return switch (status) {
                 case VERIFIED -> "Answered";
@@ -153,10 +132,6 @@ public class Dtos {
 
     // ── Answer DTOs ───────────────────────────────────────────────────────────
 
-    /**
-     * Request DTO for submitting an answer.
-     * SOLID ISP: Only contains the fields a student needs to submit.
-     */
     @Data @NoArgsConstructor @AllArgsConstructor @Builder
     public static class SubmitAnswerRequest {
         @NotBlank(message = "Answer text is required")
@@ -164,20 +139,12 @@ public class Dtos {
         private String text;
     }
 
-    /**
-     * Request DTO for faculty to verify an answer.
-     * SOLID ISP: Only contains the answer ID faculty needs to verify.
-     */
     @Data @NoArgsConstructor @AllArgsConstructor @Builder
     public static class VerifyAnswerRequest {
         @NotNull(message = "Answer ID is required")
         private Long answerId;
     }
 
-    /**
-     * Response DTO for an answer.
-     * Used when displaying answers under a question.
-     */
     @Data @NoArgsConstructor @AllArgsConstructor @Builder
     public static class AnswerResponse {
         private Long id;
@@ -186,8 +153,6 @@ public class Dtos {
         private UserResponse submittedBy;
         private LocalDateTime createdAt;
 
-        // GRASP — Information Expert:
-        // AnswerResponse knows how to build itself from an Answer entity
         public static AnswerResponse from(Answer answer) {
             return AnswerResponse.builder()
                     .id(answer.getId())
@@ -213,6 +178,133 @@ public class Dtos {
 
         public static <T> ApiResponse<T> error(String message) {
             return ApiResponse.<T>builder().success(false).message(message).build();
+        }
+    }
+
+    // ══════════════════════════════════════════════════════════════════════════
+    // ── EPIC 3: Tutor + Session DTOs ──────────────────────────────────────────
+    // ══════════════════════════════════════════════════════════════════════════
+
+    /**
+     * Story 1: Request to register as a tutor.
+     * Student sends GPA and bio when applying to become a tutor.
+     *
+     * SOLID ISP: Only contains fields needed for tutor registration.
+     */
+    @Data @NoArgsConstructor @AllArgsConstructor @Builder
+    public static class RegisterAsTutorRequest {
+        @DecimalMin(value = "0.0", message = "GPA cannot be negative")
+        @DecimalMax(value = "4.0", message = "GPA cannot exceed 4.0")
+        private double gpa;
+
+        @Size(max = 500, message = "Bio cannot exceed 500 characters")
+        private String bio;
+    }
+
+    /**
+     * Story 1: Response after successful tutor registration.
+     * Returns the created TutorProfile data so the frontend can update state.
+     *
+     * GRASP — Information Expert:
+     * TutorProfileResponse knows how to build itself from a TutorProfile entity.
+     */
+    @Data @NoArgsConstructor @AllArgsConstructor @Builder
+    public static class TutorProfileResponse {
+        private Long profileId;
+        private String tutorName;
+        private String tutorEmail;
+        private double gpa;
+        private String bio;
+        private boolean approved;
+        private String message;
+
+        public static TutorProfileResponse from(TutorProfile profile, String message) {
+            return TutorProfileResponse.builder()
+                    .profileId(profile.getId())
+                    .tutorName(profile.getUser().getName())
+                    .tutorEmail(profile.getUser().getEmail())
+                    .gpa(profile.getGpa())
+                    .bio(profile.getBio())
+                    .approved(profile.isApproved())
+                    .message(message)
+                    .build();
+        }
+    }
+
+    /**
+     * Story 2: Response for eligibility check.
+     * Tells the user if they are eligible and WHY (or why not).
+     *
+     * SOLID ISP: Only eligibility-related fields here.
+     */
+    @Data @NoArgsConstructor @AllArgsConstructor @Builder
+    public static class EligibilityResponse {
+        private boolean eligible;
+        private String criteria;      // what the rule says (e.g., "GPA >= 3.0 AND points >= 50")
+        private String currentStatus; // user's current values (e.g., "Your GPA: 3.5, Points: 60")
+        private String message;       // final human-readable verdict
+    }
+
+    /**
+     * Story 3+4: Request to create or update a tutoring session.
+     * Contains all session details a tutor provides.
+     *
+     * SOLID ISP: Only fields a tutor needs when creating a session.
+     */
+    @Data @NoArgsConstructor @AllArgsConstructor @Builder
+    public static class CreateSessionRequest {
+        @NotBlank(message = "Topic is required")
+        @Size(min = 3, max = 200, message = "Topic must be between 3 and 200 characters")
+        private String topic;
+
+        @NotNull(message = "Subject is required")
+        private Question.Subject subject;
+
+        @NotNull(message = "Scheduled time is required")
+        private LocalDateTime scheduledAt;
+
+        @Min(value = 1, message = "Capacity must be at least 1")
+        @Max(value = 100, message = "Capacity cannot exceed 100")
+        private int capacity;
+
+        @Size(max = 500, message = "Description cannot exceed 500 characters")
+        private String description;
+    }
+
+    /**
+     * Story 3,4,5: Response DTO for session-related operations.
+     * Used when creating, updating, or viewing sessions.
+     *
+     * GRASP — Information Expert:
+     * SessionResponse knows how to build itself from a TutoringSession entity.
+     */
+    @Data @NoArgsConstructor @AllArgsConstructor @Builder(toBuilder = true)
+    public static class SessionResponse {
+        private Long sessionId;
+        private String topic;
+        private String subject;
+        private LocalDateTime scheduledAt;
+        private int capacity;
+        private String status;
+        private String description;
+        private String tutorName;   // who created this session
+        private String tutorEmail;
+        private LocalDateTime createdAt;
+        private String message;     // optional operation feedback
+
+        public static SessionResponse from(TutoringSession session) {
+            return SessionResponse.builder()
+                    .sessionId(session.getId())
+                    .topic(session.getTopic())
+                    .subject(session.getSubject().name())
+                    .scheduledAt(session.getScheduledAt())
+                    .capacity(session.getCapacity())
+                    .status(session.getStatus().name())
+                    .description(session.getDescription())
+                    .tutorName(session.getTutor().getName())
+                    .tutorEmail(session.getTutor().getEmail())
+                    .createdAt(session.getCreatedAt())
+                    .build();
         }
     }
 }
