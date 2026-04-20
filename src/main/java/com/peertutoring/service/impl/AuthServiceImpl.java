@@ -5,6 +5,7 @@ import com.peertutoring.exception.DuplicateResourceException;
 import com.peertutoring.exception.ResourceNotFoundException;
 import com.peertutoring.model.User;
 import com.peertutoring.pattern.factory.UserFactory;
+import com.peertutoring.repository.TutorProfileRepository;
 import com.peertutoring.repository.UserRepository;
 import com.peertutoring.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final UserFactory userFactory; // Factory Pattern
+    private final TutorProfileRepository tutorProfileRepository;
 
     @Override
     public AuthResponse signup(SignupRequest request) {
@@ -59,6 +61,7 @@ public class AuthServiceImpl implements AuthService {
         User savedUser = userRepository.save(user);
 
         return AuthResponse.builder()
+                .id(savedUser.getId())
                 .token("demo-token-" + savedUser.getId())
                 .email(savedUser.getEmail())
                 .name(savedUser.getName())
@@ -76,12 +79,16 @@ public class AuthServiceImpl implements AuthService {
             throw new ResourceNotFoundException("Invalid email or password");
         }
 
+        boolean isTutor = tutorProfileRepository.findByUser(user).isPresent();
+
     return AuthResponse.builder()
+        .id(user.getId())
         .token("demo-token-" + user.getId())
         .email(user.getEmail())
         .name(user.getName())
         .role(user.getRole().name())
-        .points(user.getPoints())   // ← ADD THIS LINE
+        .points(user.getPoints())
+        .isTutor(isTutor)
         .message("Login successful!")
         .build();
     }

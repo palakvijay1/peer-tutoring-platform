@@ -53,11 +53,13 @@ public class Dtos {
 
     @Data @NoArgsConstructor @AllArgsConstructor @Builder
     public static class AuthResponse {
+        private Long id;
         private String token;
         private String email;
         private String name;
         private String role;
         private int points;
+        private Boolean isTutor;
         private String message;
     }
 

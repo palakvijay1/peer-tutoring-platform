@@ -1,1485 +1,869 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PeerLearn</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: #f0f4ff;
-            min-height: 100vh;
-        }
-
-        nav {
-            background: #1a1a2e;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            color: #7c6af7;
-            font-size: 1.4rem;
-            font-weight: 700;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 0.75rem;
-        }
-
-        .nav-btn {
-            background: none;
-            border: 1.5px solid #7c6af7;
-            color: #7c6af7;
-            padding: 0.4rem 1.1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.88rem;
-        }
-
-        .nav-btn:hover,
-        .nav-btn.active {
-            background: #7c6af7;
-            color: white;
-        }
-
-        .nav-btn.danger {
-            border-color: #e24b4a;
-            color: #e24b4a;
-        }
-
-        .nav-btn.danger:hover {
-            background: #e24b4a;
-            color: white;
-        }
-
-        .page {
-            display: none;
-            padding: 2rem;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        .card {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
-            margin-bottom: 1.5rem;
-        }
-
-        .card h2 {
-            font-size: 1.25rem;
-            margin-bottom: 1.5rem;
-            color: #1a1a2e;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        label {
-            display: block;
-            font-size: 0.83rem;
-            color: #555;
-            margin-bottom: 0.35rem;
-            font-weight: 500;
-        }
-
-        input,
-        select,
-        textarea {
-            width: 100%;
-            padding: 0.65rem 1rem;
-            border: 1.5px solid #ddd;
-            border-radius: 10px;
-            font-size: 0.93rem;
-            font-family: inherit;
-            transition: border 0.2s;
-        }
-
-        input:focus,
-        select:focus,
-        textarea:focus {
-            outline: none;
-            border-color: #7c6af7;
-        }
-
-        textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        .btn {
-            padding: 0.72rem 1.5rem;
-            border-radius: 10px;
-            border: none;
-            font-size: 0.93rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-full {
-            width: 100%;
-            margin-top: 0.5rem;
-        }
-
-        .btn-primary {
-            background: #7c6af7;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #6555e0;
-        }
-
-        .btn-secondary {
-            background: #f0f4ff;
-            color: #7c6af7;
-            border: 1.5px solid #7c6af7;
-        }
-
-        .btn-delete {
-            background: none;
-            border: 1.5px solid #e24b4a;
-            color: #e24b4a;
-            padding: 0.3rem 0.9rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.78rem;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-
-        .btn-delete:hover {
-            background: #e24b4a;
-            color: white;
-        }
-
-        .btn-verify {
-            background: #1d9e75;
-            color: white;
-            border: none;
-            padding: 0.3rem 0.9rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.78rem;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-
-        .btn-verify:hover {
-            background: #157a5a;
-        }
-
-        .alert {
-            padding: 0.75rem 1rem;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            font-size: 0.88rem;
-            display: none;
-        }
-
-        .alert.show {
-            display: block;
-        }
-
-        .alert.success {
-            background: #eaf3de;
-            color: #3b6d11;
-            border: 1px solid #97c459;
-        }
-
-        .alert.error {
-            background: #fcebeb;
-            color: #a32d2d;
-            border: 1px solid #f09595;
-        }
-
-        .hero {
-            text-align: center;
-            padding: 5rem 2rem;
-        }
-
-        .hero h1 {
-            font-size: 2.4rem;
-            color: #1a1a2e;
-            margin-bottom: 1rem;
-        }
-
-        .hero h1 span {
-            color: #7c6af7;
-        }
-
-        .hero p {
-            color: #666;
-            font-size: 1.05rem;
-            margin-bottom: 2rem;
-        }
-
-        .hero-btns {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-        }
-
-        .hero-btns .btn {
-            padding: 0.75rem 2rem;
-        }
-
-        .switch-text {
-            text-align: center;
-            margin-top: 1rem;
-            font-size: 0.88rem;
-            color: #666;
-        }
-
-        .switch-text a {
-            color: #7c6af7;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .profile-bar {
-            background: white;
-            border-radius: 14px;
-            padding: 1rem 1.5rem;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-        }
-
-        .avatar {
-            width: 46px;
-            height: 46px;
-            border-radius: 50%;
-            background: #7c6af7;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1.1rem;
-            flex-shrink: 0;
-        }
-
-        .profile-info h3 {
-            font-size: 0.98rem;
-        }
-
-        .profile-info p {
-            font-size: 0.82rem;
-            color: #888;
-        }
-
-        .role-badge {
-            margin-left: auto;
-            background: #eeedfe;
-            color: #534ab7;
-            padding: 0.35rem 1rem;
-            border-radius: 20px;
-            font-size: 0.82rem;
-            font-weight: 600;
-        }
-
-        .role-badge.faculty {
-            background: #faeeda;
-            color: #854f0b;
-        }
-
-        .points-badge {
-            background: #e1f5ee;
-            color: #0f6e56;
-            padding: 0.35rem 1rem;
-            border-radius: 20px;
-            font-size: 0.82rem;
-            font-weight: 600;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .tab {
-            padding: 0.5rem 1.2rem;
-            border-radius: 8px;
-            border: 1.5px solid #ddd;
-            background: white;
-            cursor: pointer;
-            font-size: 0.88rem;
-            transition: all 0.2s;
-        }
-
-        .tab.active {
-            background: #7c6af7;
-            color: white;
-            border-color: #7c6af7;
-        }
-
-        .filter-row {
-            display: flex;
-            gap: 0.75rem;
-            margin-bottom: 1.25rem;
-            flex-wrap: wrap;
-        }
-
-        .filter-row select {
-            flex: 1;
-            min-width: 140px;
-        }
-
-        /* Question card */
-        .q-card {
-            background: white;
-            border-radius: 14px;
-            padding: 1.2rem 1.5rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            border-left: 4px solid #7c6af7;
-        }
-
-        .q-card.VERIFIED {
-            border-left-color: #1d9e75;
-        }
-
-        .q-text {
-            font-size: 0.97rem;
-            color: #1a1a2e;
-            margin-bottom: 0.75rem;
-            line-height: 1.55;
-        }
-
-        .q-meta {
-            display: flex;
-            gap: 0.6rem;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 0.5rem;
-        }
-
-        .q-actions {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 0.75rem;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        /* Answer section under question */
-        .answer-section {
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid #f0f0f0;
-        }
-
-        .answer-section h4 {
-            font-size: 0.85rem;
-            color: #888;
-            margin-bottom: 0.6rem;
-        }
-
-        .verified-answer {
-            background: #e1f5ee;
-            border-radius: 10px;
-            padding: 0.8rem 1rem;
-            border-left: 3px solid #1d9e75;
-        }
-
-        .verified-answer p {
-            font-size: 0.92rem;
-            color: #1a1a2e;
-            line-height: 1.5;
-        }
-
-        .verified-answer .ans-meta {
-            font-size: 0.78rem;
-            color: #888;
-            margin-top: 0.4rem;
-        }
-
-        /* Answer form inline */
-        .answer-form {
-            margin-top: 0.75rem;
-            display: none;
-        }
-
-        .answer-form textarea {
-            min-height: 70px;
-            margin-bottom: 0.5rem;
-        }
-
-        /* Faculty answer list */
-        .faculty-answer-item {
-            background: #f8f8ff;
-            border-radius: 10px;
-            padding: 0.8rem 1rem;
-            margin-bottom: 0.6rem;
-            border-left: 3px solid #ddd;
-        }
-
-        .faculty-answer-item.verified-item {
-            border-left-color: #1d9e75;
-            background: #e1f5ee;
-        }
-
-        .faculty-answer-item p {
-            font-size: 0.92rem;
-            color: #1a1a2e;
-        }
-
-        .faculty-answer-item .ans-meta {
-            font-size: 0.78rem;
-            color: #888;
-            margin-top: 0.3rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .badge {
-            padding: 0.22rem 0.7rem;
-            border-radius: 20px;
-            font-size: 0.76rem;
-            font-weight: 600;
-        }
-
-        .badge-sub {
-            background: #eeedfe;
-            color: #534ab7;
-        }
-
-        .badge-Pending {
-            background: #e6f1fb;
-            color: #185fa5;
-        }
-
-        .badge-Answered {
-            background: #e1f5ee;
-            color: #0f6e56;
-        }
-
-        .q-date {
-            font-size: 0.78rem;
-            color: #bbb;
-            margin-left: auto;
-        }
-
-        .empty {
-            text-align: center;
-            padding: 3rem;
-            color: #bbb;
-            font-size: 0.95rem;
-        }
-
-        .spinner {
-            text-align: center;
-            padding: 2rem;
-            color: #7c6af7;
-            font-size: 0.93rem;
-        }
-
-        /* My answers tab */
-        .my-answer-card {
-            background: white;
-            border-radius: 14px;
-            padding: 1.2rem 1.5rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            border-left: 4px solid #7c6af7;
-        }
-
-        .my-answer-card.verified-ans {
-            border-left-color: #1d9e75;
-        }
-
-        .question-ref {
-            font-size: 0.8rem;
-            color: #888;
-            margin-bottom: 0.4rem;
-        }
-
-        .answer-text {
-            font-size: 0.95rem;
-            color: #1a1a2e;
-            line-height: 1.5;
-            margin-bottom: 0.5rem;
-        }
-
-        /* ── EPIC 3: Tutor Panel ──────────────────────────────────────── */
-        .session-card {
-            background: #f8f8ff;
-            border-radius: 12px;
-            padding: 1.1rem 1.3rem;
-            margin-bottom: 0.9rem;
-            border-left: 4px solid #7c6af7;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .session-card .session-info {
-            flex: 1;
-            min-width: 180px;
-        }
-
-        .session-card .session-topic {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #1a1a2e;
-            margin-bottom: 0.3rem;
-        }
-
-        .session-card .session-meta {
-            font-size: 0.8rem;
-            color: #888;
-            display: flex;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-        }
-
-        .session-card .session-badges {
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-            flex-shrink: 0;
-        }
-
-        .badge-capacity {
-            background: #fff3e0;
-            color: #b55c00;
-            padding: 0.22rem 0.7rem;
-            border-radius: 20px;
-            font-size: 0.76rem;
-            font-weight: 600;
-        }
-
-        .badge-upcoming {
-            background: #eeedfe;
-            color: #534ab7;
-            padding: 0.22rem 0.7rem;
-            border-radius: 20px;
-            font-size: 0.76rem;
-            font-weight: 600;
-        }
-
-        .eligibility-result {
-            padding: 1rem 1.2rem;
-            border-radius: 12px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            text-align: center;
-            margin-top: 0.5rem;
-        }
-
-        .eligibility-result.yes {
-            background: #e1f5ee;
-            color: #0f6e56;
-            border: 1.5px solid #1d9e75;
-        }
-
-        .eligibility-result.no {
-            background: #fcebeb;
-            color: #a32d2d;
-            border: 1.5px solid #f09595;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f4ff; min-height: 100vh; }
+        nav { background: #1a1a2e; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { color: #7c6af7; font-size: 1.4rem; font-weight: 700; }
+        .nav-links { display: flex; gap: 0.75rem; }
+        .nav-btn { background: none; border: 1.5px solid #7c6af7; color: #7c6af7; padding: 0.4rem 1.1rem; border-radius: 8px; cursor: pointer; font-size: 0.88rem; }
+        .nav-btn:hover, .nav-btn.active { background: #7c6af7; color: white; }
+        .nav-btn.danger { border-color: #e24b4a; color: #e24b4a; }
+        .nav-btn.danger:hover { background: #e24b4a; color: white; }
+        .page { display: none; padding: 2rem; max-width: 960px; margin: 0 auto; }
+        .page.active { display: block; }
+        .card { background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 2px 12px rgba(0,0,0,0.07); margin-bottom: 1.5rem; }
+        .card h2 { font-size: 1.2rem; margin-bottom: 1.25rem; color: #1a1a2e; }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; font-size: 0.83rem; color: #555; margin-bottom: 0.35rem; font-weight: 500; }
+        input, select, textarea { width: 100%; padding: 0.65rem 1rem; border: 1.5px solid #ddd; border-radius: 10px; font-size: 0.93rem; font-family: inherit; transition: border 0.2s; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #7c6af7; }
+        textarea { min-height: 90px; resize: vertical; }
+        .btn { padding: 0.72rem 1.5rem; border-radius: 10px; border: none; font-size: 0.93rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-full { width: 100%; margin-top: 0.5rem; }
+        .btn-primary { background: #7c6af7; color: white; }
+        .btn-primary:hover { background: #6555e0; }
+        .btn-secondary { background: #f0f4ff; color: #7c6af7; border: 1.5px solid #7c6af7; }
+        .btn-secondary:hover { background: #e4e0fe; }
+        .btn-sm { padding: 0.3rem 0.9rem; font-size: 0.78rem; font-weight: 600; border-radius: 8px; border: none; cursor: pointer; transition: all 0.2s; }
+        .btn-delete { background: none; border: 1.5px solid #e24b4a; color: #e24b4a; }
+        .btn-delete:hover { background: #e24b4a; color: white; }
+        .btn-verify { background: #1d9e75; color: white; border: none; padding: 0.3rem 0.9rem; border-radius: 8px; cursor: pointer; font-size: 0.78rem; font-weight: 600; }
+        .btn-verify:hover { background: #157a5a; }
+        .btn-book { background: #7c6af7; color: white; }
+        .btn-book:hover { background: #6555e0; }
+        .btn-attend { background: #f0a500; color: white; }
+        .btn-attend:hover { background: #c87d00; }
+        .alert { padding: 0.75rem 1rem; border-radius: 10px; margin-bottom: 1rem; font-size: 0.88rem; display: none; }
+        .alert.show { display: block; }
+        .alert.success { background: #eaf3de; color: #3b6d11; border: 1px solid #97c459; }
+        .alert.error { background: #fcebeb; color: #a32d2d; border: 1px solid #f09595; }
+        .alert.info { background: #e8f0fe; color: #1a4fa8; border: 1px solid #7ca9f5; }
+        .hero { text-align: center; padding: 5rem 2rem; }
+        .hero h1 { font-size: 2.4rem; color: #1a1a2e; margin-bottom: 1rem; }
+        .hero h1 span { color: #7c6af7; }
+        .hero p { color: #666; font-size: 1.05rem; margin-bottom: 2rem; }
+        .hero-btns { display: flex; gap: 1rem; justify-content: center; }
+        .hero-btns .btn { padding: 0.75rem 2rem; }
+        .switch-text { text-align: center; margin-top: 1rem; font-size: 0.88rem; color: #666; }
+        .switch-text a { color: #7c6af7; cursor: pointer; font-weight: 600; }
+        .profile-bar { background: white; border-radius: 14px; padding: 1rem 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); flex-wrap: wrap; }
+        .avatar { width: 46px; height: 46px; border-radius: 50%; background: #7c6af7; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; flex-shrink: 0; }
+        .profile-info h3 { font-size: 0.98rem; }
+        .profile-info p { font-size: 0.82rem; color: #888; }
+        .role-badge { margin-left: auto; background: #eeedfe; color: #534ab7; padding: 0.35rem 1rem; border-radius: 20px; font-size: 0.82rem; font-weight: 600; }
+        .role-badge.faculty { background: #faeeda; color: #854f0b; }
+        .points-badge { background: #e1f5ee; color: #0f6e56; padding: 0.35rem 1rem; border-radius: 20px; font-size: 0.82rem; font-weight: 600; }
+        .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .tab { padding: 0.5rem 1.2rem; border-radius: 8px; border: 1.5px solid #ddd; background: white; cursor: pointer; font-size: 0.88rem; transition: all 0.2s; font-weight: 500; }
+        .tab.active { background: #7c6af7; color: white; border-color: #7c6af7; }
+        .tab:hover:not(.active) { border-color: #7c6af7; color: #7c6af7; }
+        .filter-row { display: flex; gap: 0.75rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+        .filter-row select { flex: 1; min-width: 140px; }
+        .badge { padding: 0.22rem 0.7rem; border-radius: 20px; font-size: 0.76rem; font-weight: 600; }
+        .badge-sub { background: #eeedfe; color: #534ab7; }
+        .badge-Pending { background: #e6f1fb; color: #185fa5; }
+        .badge-Answered { background: #e1f5ee; color: #0f6e56; }
+        .badge-UPCOMING { background: #eeedfe; color: #534ab7; }
+        .badge-COMPLETED { background: #e1f5ee; color: #0f6e56; }
+        .badge-CANCELLED { background: #fcebeb; color: #a32d2d; }
+        .badge-booked { background: #e1f5ee; color: #0f6e56; }
+        .q-date { font-size: 0.78rem; color: #bbb; margin-left: auto; }
+        .empty { text-align: center; padding: 3rem; color: #bbb; font-size: 0.95rem; }
+        .spinner { text-align: center; padding: 2rem; color: #7c6af7; font-size: 0.93rem; }
+        .q-card { background: white; border-radius: 14px; padding: 1.2rem 1.5rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 4px solid #7c6af7; }
+        .q-card.VERIFIED { border-left-color: #1d9e75; }
+        .q-text { font-size: 0.97rem; color: #1a1a2e; margin-bottom: 0.75rem; line-height: 1.55; }
+        .q-meta { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.5rem; }
+        .q-actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; flex-wrap: wrap; align-items: center; }
+        .answer-section { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #f0f0f0; }
+        .answer-section h4 { font-size: 0.85rem; color: #888; margin-bottom: 0.6rem; }
+        .verified-answer { background: #e1f5ee; border-radius: 10px; padding: 0.8rem 1rem; border-left: 3px solid #1d9e75; }
+        .verified-answer p { font-size: 0.92rem; color: #1a1a2e; line-height: 1.5; }
+        .verified-answer .ans-meta { font-size: 0.78rem; color: #888; margin-top: 0.4rem; }
+        .answer-form { margin-top: 0.75rem; display: none; }
+        .answer-form textarea { min-height: 70px; margin-bottom: 0.5rem; }
+        .faculty-answer-item { background: #f8f8ff; border-radius: 10px; padding: 0.8rem 1rem; margin-bottom: 0.6rem; border-left: 3px solid #ddd; }
+        .faculty-answer-item.verified-item { border-left-color: #1d9e75; background: #e1f5ee; }
+        .faculty-answer-item p { font-size: 0.92rem; color: #1a1a2e; }
+        .faculty-answer-item .ans-meta { font-size: 0.78rem; color: #888; margin-top: 0.3rem; display: flex; justify-content: space-between; align-items: center; }
+        .my-answer-card { background: white; border-radius: 14px; padding: 1.2rem 1.5rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 4px solid #7c6af7; }
+        .my-answer-card.verified-ans { border-left-color: #1d9e75; }
+        .answer-text { font-size: 0.95rem; color: #1a1a2e; line-height: 1.5; margin-bottom: 0.5rem; }
+        .session-card { background: #f8f8ff; border-radius: 12px; padding: 1.1rem 1.3rem; margin-bottom: 0.9rem; border-left: 4px solid #7c6af7; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; }
+        .session-card .session-info { flex: 1; min-width: 180px; }
+        .session-card .session-topic { font-size: 1rem; font-weight: 600; color: #1a1a2e; margin-bottom: 0.3rem; }
+        .session-card .session-meta { font-size: 0.8rem; color: #888; display: flex; gap: 0.75rem; flex-wrap: wrap; }
+        .session-card .session-badges { display: flex; gap: 0.5rem; align-items: center; flex-shrink: 0; }
+        .badge-capacity { background: #fff3e0; color: #b55c00; padding: 0.22rem 0.7rem; border-radius: 20px; font-size: 0.76rem; font-weight: 600; }
+        .badge-upcoming { background: #eeedfe; color: #534ab7; padding: 0.22rem 0.7rem; border-radius: 20px; font-size: 0.76rem; font-weight: 600; }
+        /* Epic 4 */
+        .browse-card { background: white; border-radius: 14px; padding: 1.2rem 1.5rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 4px solid #7c6af7; }
+        .browse-card .bc-title { font-size: 1rem; font-weight: 700; color: #1a1a2e; margin-bottom: 0.5rem; }
+        .browse-card .bc-meta { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; font-size: 0.8rem; color: #777; margin-bottom: 0.6rem; }
+        .browse-card .bc-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+        .slots-info { font-size: 0.8rem; color: #888; }
+        .slots-full { font-size: 0.8rem; color: #e24b4a; font-weight: 600; }
+        .booking-card { background: white; border-radius: 14px; padding: 1.2rem 1.5rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 4px solid #f0a500; }
+        .booking-card.attended { border-left-color: #1d9e75; }
+        .booking-card .bk-title { font-size: 1rem; font-weight: 600; color: #1a1a2e; margin-bottom: 0.4rem; }
+        .booking-card .bk-meta { font-size: 0.8rem; color: #888; display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.6rem; }
+        .booking-card .bk-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+        .rate-form { background: #f8f8ff; border-radius: 12px; padding: 1rem; margin-top: 0.75rem; display: none; }
+        .rate-form.open { display: block; }
+        .star-row { display: flex; gap: 0.3rem; margin: 0.4rem 0; }
+        .star { font-size: 1.5rem; cursor: pointer; color: #ddd; transition: color 0.15s; line-height: 1; }
+        .star.selected { color: #f0a500; }
+        .star-display { color: #f0a500; }
+        .lb-table { width: 100%; border-collapse: collapse; }
+        .lb-table th { text-align: left; padding: 0.6rem 1rem; font-size: 0.8rem; color: #888; border-bottom: 1.5px solid #f0f0f0; font-weight: 600; }
+        .lb-table td { padding: 0.75rem 1rem; font-size: 0.9rem; border-bottom: 1px solid #f5f5f5; vertical-align: middle; }
+        .lb-table tr:last-child td { border-bottom: none; }
+        .lb-table tr:hover td { background: #f8f8ff; }
     </style>
 </head>
-
 <body>
 
-    <nav>
-        <div class="logo">PeerLearn</div>
-        <div class="nav-links" id="navLinks">
-            <button class="nav-btn active" onclick="showPage('home')">Home</button>
-            <button class="nav-btn" onclick="showPage('login')">Login</button>
-            <button class="nav-btn" onclick="showPage('signup')">Sign Up</button>
-        </div>
-    </nav>
+<nav>
+    <div class="logo">PeerLearn</div>
+    <div class="nav-links" id="navLinks">
+        <button class="nav-btn active" onclick="showPage('home')">Home</button>
+        <button class="nav-btn" onclick="showPage('login')">Login</button>
+        <button class="nav-btn" onclick="showPage('signup')">Sign Up</button>
+    </div>
+</nav>
 
-    <!-- HOME -->
-    <div class="page active" id="page-home">
-        <div class="hero">
-            <h1>Learn Better with <span>Peer Tutoring</span></h1>
-            <p>Post academic questions, get answers from peers, and book tutoring sessions.</p>
-            <div class="hero-btns">
-                <button class="btn btn-primary" onclick="showPage('signup')">Get Started</button>
-                <button class="btn btn-secondary" onclick="showPage('login')">Login</button>
-            </div>
+<!-- HOME -->
+<div class="page active" id="page-home">
+    <div class="hero">
+        <h1>Learn Better with <span>Peer Tutoring</span></h1>
+        <p>Post questions, get expert answers, browse tutoring sessions, and track your progress.</p>
+        <div class="hero-btns">
+            <button class="btn btn-primary" onclick="showPage('signup')">Get Started</button>
+            <button class="btn btn-secondary" onclick="showPage('login')">Login</button>
+        </div>
+    </div>
+</div>
+
+<!-- SIGNUP -->
+<div class="page" id="page-signup">
+    <div class="card" style="max-width:460px;margin:2rem auto;">
+        <h2>Create Account</h2>
+        <div class="alert" id="signupAlert"></div>
+        <div class="form-group"><label>Full Name</label><input type="text" id="signupName" placeholder="Your full name"></div>
+        <div class="form-group"><label>Email</label><input type="email" id="signupEmail" placeholder="your@email.com"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="signupPassword" placeholder="Min 6 characters"></div>
+        <div class="form-group">
+            <label>Role</label>
+            <select id="signupRole"><option value="STUDENT">Student</option><option value="FACULTY">Faculty</option></select>
+        </div>
+        <button class="btn btn-primary btn-full" onclick="signup()">Create Account</button>
+        <div class="switch-text">Already have an account? <a onclick="showPage('login')">Login</a></div>
+    </div>
+</div>
+
+<!-- LOGIN -->
+<div class="page" id="page-login">
+    <div class="card" style="max-width:460px;margin:2rem auto;">
+        <h2>Welcome Back</h2>
+        <div class="alert" id="loginAlert"></div>
+        <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="your@email.com"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="Your password"></div>
+        <button class="btn btn-primary btn-full" onclick="login()">Login</button>
+        <div class="switch-text">Don't have an account? <a onclick="showPage('signup')">Sign Up</a></div>
+    </div>
+</div>
+
+<!-- STUDENT DASHBOARD -->
+<div class="page" id="page-dashboard">
+    <div class="profile-bar">
+        <div class="avatar" id="avatarText">?</div>
+        <div class="profile-info"><h3 id="profileName">-</h3><p id="profileEmail">-</p></div>
+        <span class="points-badge" id="pointsBadge">⭐ 0 pts</span>
+        <div class="role-badge" id="roleBadge">STUDENT</div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" id="tab-btn-feed"        onclick="switchTab('feed')">All Questions</button>
+        <button class="tab"        id="tab-btn-my"          onclick="switchTab('my')">My Questions</button>
+        <button class="tab"        id="tab-btn-myanswers"   onclick="switchTab('myanswers')">My Answers</button>
+        <button class="tab"        id="tab-btn-post"        onclick="switchTab('post')">Post Question</button>
+        <button class="tab"        id="tab-btn-tutor"       onclick="switchTab('tutor')">🎓 Tutor Panel</button>
+        <button class="tab"        id="tab-btn-browse"      onclick="switchTab('browse')">📅 Browse Sessions</button>
+        <button class="tab"        id="tab-btn-bookings"    onclick="switchTab('bookings')">🎟 My Bookings</button>
+        <button class="tab"        id="tab-btn-leaderboard" onclick="switchTab('leaderboard')">🏆 Leaderboard</button>
+    </div>
+
+    <!-- ALL QUESTIONS -->
+    <div id="tab-feed">
+        <div class="filter-row">
+            <select id="subjectFilter" onchange="loadFeed()"><option value="">All Subjects</option></select>
+            <select id="sortFilter" onchange="loadFeed()">
+                <option value="newest">Newest First</option>
+                <option value="subject">By Subject</option>
+                <option value="status">By Status</option>
+            </select>
+        </div>
+        <div id="feedList"><div class="spinner">Loading...</div></div>
+    </div>
+
+    <!-- MY QUESTIONS -->
+    <div id="tab-my" style="display:none;">
+        <div id="myList"><div class="spinner">Loading...</div></div>
+    </div>
+
+    <!-- MY ANSWERS -->
+    <div id="tab-myanswers" style="display:none;">
+        <div id="myAnswersList"><div class="spinner">Loading...</div></div>
+    </div>
+
+    <!-- POST QUESTION -->
+    <div id="tab-post" style="display:none;">
+        <div class="card">
+            <h2>Post a Question</h2>
+            <div class="alert" id="postAlert"></div>
+            <div class="form-group"><label>Your Question</label><textarea id="qText" placeholder="Describe your question in detail..."></textarea></div>
+            <div class="form-group"><label>Subject</label><select id="qSubject"><option value="">Select subject</option></select></div>
+            <button class="btn btn-primary btn-full" onclick="postQuestion()">Post Question</button>
         </div>
     </div>
 
-    <!-- SIGNUP -->
-    <div class="page" id="page-signup">
-        <div class="card" style="max-width:460px;margin:2rem auto;">
-            <h2>Create Account</h2>
-            <div class="alert" id="signupAlert"></div>
-            <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" id="signupName" placeholder="Your full name">
-            </div>
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" id="signupEmail" placeholder="your@email.com">
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="signupPassword" placeholder="Min 6 characters">
-            </div>
-            <div class="form-group">
-                <label>Role</label>
-                <select id="signupRole">
-                    <option value="STUDENT">Student</option>
-                    <option value="FACULTY">Faculty</option>
-                </select>
-            </div>
-            <button class="btn btn-primary btn-full" onclick="signup()">Create Account</button>
-            <div class="switch-text">Already have an account? <a onclick="showPage('login')">Login</a></div>
-        </div>
-    </div>
-
-    <!-- LOGIN -->
-    <div class="page" id="page-login">
-        <div class="card" style="max-width:460px;margin:2rem auto;">
-            <h2>Welcome Back</h2>
-            <div class="alert" id="loginAlert"></div>
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" id="loginEmail" placeholder="your@email.com">
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="loginPassword" placeholder="Your password">
-            </div>
-            <button class="btn btn-primary btn-full" onclick="login()">Login</button>
-            <div class="switch-text">Don't have an account? <a onclick="showPage('signup')">Sign Up</a></div>
-        </div>
-    </div>
-
-    <!-- STUDENT DASHBOARD -->
-    <div class="page" id="page-dashboard">
-        <div class="profile-bar">
-            <div class="avatar" id="avatarText">?</div>
-            <div class="profile-info">
-                <h3 id="profileName">-</h3>
-                <p id="profileEmail">-</p>
-            </div>
-            <span class="points-badge" id="pointsBadge">⭐ 0 pts</span>
-            <div class="role-badge" id="roleBadge">STUDENT</div>
-        </div>
-
-        <div class="tabs">
-            <button class="tab active" id="tab-btn-feed" onclick="switchTab('feed')">All Questions</button>
-            <button class="tab" id="tab-btn-my" onclick="switchTab('my')">My Questions</button>
-            <button class="tab" id="tab-btn-myanswers" onclick="switchTab('myanswers')">My Answers</button>
-            <button class="tab" id="tab-btn-post" onclick="switchTab('post')">Post Question</button>
-            <button class="tab" id="tab-btn-tutor" onclick="switchTab('tutor')">🎓 Tutor Panel</button>
-        </div>
-
-        <!-- ALL QUESTIONS FEED -->
-        <div id="tab-feed">
-            <div class="filter-row">
-                <select id="subjectFilter" onchange="loadFeed()">
-                    <option value="">All Subjects</option>
-                </select>
-                <select id="sortFilter" onchange="loadFeed()">
-                    <option value="newest">Newest First</option>
-                    <option value="subject">By Subject</option>
-                    <option value="status">By Status</option>
-                </select>
-            </div>
-            <div id="feedList">
-                <div class="spinner">Loading...</div>
-            </div>
-        </div>
-
-        <!-- MY QUESTIONS -->
-        <div id="tab-my" style="display:none;">
-            <div id="myList">
-                <div class="spinner">Loading...</div>
-            </div>
-        </div>
-
-        <!-- MY ANSWERS -->
-        <div id="tab-myanswers" style="display:none;">
-            <div id="myAnswersList">
-                <div class="spinner">Loading...</div>
-            </div>
-        </div>
-
-        <!-- POST QUESTION -->
-        <div id="tab-post" style="display:none;">
-            <div class="card">
-                <h2>Post a Question</h2>
-                <div class="alert" id="postAlert"></div>
-                <div class="form-group">
-                    <label>Your Question</label>
-                    <textarea id="qText" placeholder="Describe your question in detail..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Subject</label>
-                    <select id="qSubject">
-                        <option value="">Select subject</option>
-                    </select>
-                </div>
-                <button class="btn btn-primary btn-full" onclick="postQuestion()">Post Question</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- TUTOR PANEL (EPIC 3) -->
+    <!-- TUTOR PANEL (Epic 3) -->
     <div id="tab-tutor" style="display:none;">
-
-        <!-- ─── SECTION 1: Check Eligibility ─────────────────────────── -->
         <div class="card">
             <h2>🔍 Check Eligibility</h2>
             <div class="alert" id="eligibilityAlert"></div>
-            <p style="font-size:0.88rem;color:#666;margin-bottom:1rem;">
-                Check if you meet the requirements to become a tutor
-                (GPA &ge; 3.0 &amp; 50+ platform points).
-            </p>
+            <p style="font-size:0.88rem;color:#666;margin-bottom:1rem;">Requirements: GPA &ge; 3.0 and 50+ platform points.</p>
             <button class="btn btn-secondary" onclick="checkEligibility()">Check My Eligibility</button>
         </div>
-
-        <!-- ─── SECTION 2: Register as Tutor ─────────────────────────── -->
         <div class="card">
             <h2>📝 Register as Tutor</h2>
             <div class="alert" id="registerTutorAlert"></div>
-            <div class="form-group">
-                <label>GPA (0.0 – 4.0)</label>
-                <input type="number" id="tutorGpa" placeholder="e.g. 3.5" min="0" max="4" step="0.1">
-            </div>
-            <div class="form-group">
-                <label>Bio <span style="font-weight:400;color:#aaa;">(optional)</span></label>
-                <textarea id="tutorBio"
-                    placeholder="Briefly describe your expertise and subjects you can teach..."></textarea>
-            </div>
+            <div class="form-group"><label>GPA (0.0 – 4.0)</label><input type="number" id="tutorGpa" placeholder="e.g. 3.5" min="0" max="4" step="0.1"></div>
+            <div class="form-group"><label>Bio <span style="font-weight:400;color:#aaa;">(optional)</span></label><textarea id="tutorBio" placeholder="Your expertise..."></textarea></div>
             <button class="btn btn-primary btn-full" onclick="registerTutor()">Register as Tutor</button>
         </div>
-
-        <!-- ─── SECTION 3: Create Session ────────────────────────────── -->
         <div class="card">
             <h2>➕ Create Tutoring Session</h2>
             <div class="alert" id="createSessionAlert"></div>
-            <div class="form-group">
-                <label>Topic</label>
-                <input type="text" id="sessionTopic" placeholder="e.g. Binary Trees, SQL Joins...">
-            </div>
+            <div class="form-group"><label>Topic</label><input type="text" id="sessionTopic" placeholder="e.g. Binary Trees, SQL Joins..."></div>
             <div class="form-group">
                 <label>Subject</label>
                 <select id="sessionSubject">
                     <option value="">Select a subject</option>
-                    <option value="MATHEMATICS">Mathematics</option>
-                    <option value="PHYSICS">Physics</option>
-                    <option value="CHEMISTRY">Chemistry</option>
-                    <option value="BIOLOGY">Biology</option>
-                    <option value="COMPUTER_SCIENCE">Computer Science</option>
-                    <option value="DATA_STRUCTURES">Data Structures</option>
-                    <option value="ALGORITHMS">Algorithms</option>
-                    <option value="DBMS">DBMS</option>
-                    <option value="OPERATING_SYSTEMS">Operating Systems</option>
-                    <option value="NETWORKS">Networks</option>
-                    <option value="ENGLISH">English</option>
-                    <option value="HISTORY">History</option>
-                    <option value="ECONOMICS">Economics</option>
-                    <option value="OTHER">Other</option>
+                    <option value="MATHEMATICS">Mathematics</option><option value="PHYSICS">Physics</option>
+                    <option value="CHEMISTRY">Chemistry</option><option value="BIOLOGY">Biology</option>
+                    <option value="COMPUTER_SCIENCE">Computer Science</option><option value="DATA_STRUCTURES">Data Structures</option>
+                    <option value="ALGORITHMS">Algorithms</option><option value="DBMS">DBMS</option>
+                    <option value="OPERATING_SYSTEMS">Operating Systems</option><option value="NETWORKS">Networks</option>
+                    <option value="ENGLISH">English</option><option value="HISTORY">History</option>
+                    <option value="ECONOMICS">Economics</option><option value="OTHER">Other</option>
                 </select>
             </div>
-            <div class="form-group">
-                <label>Scheduled Date &amp; Time</label>
-                <input type="datetime-local" id="sessionScheduledAt">
-            </div>
-            <div class="form-group">
-                <label>Capacity (max students)</label>
-                <input type="number" id="sessionCapacity" placeholder="e.g. 10" min="1" max="100">
-            </div>
-            <div class="form-group">
-                <label>Description <span style="font-weight:400;color:#aaa;">(optional)</span></label>
-                <textarea id="sessionDescription" placeholder="What will you cover in this session?"></textarea>
-            </div>
+            <div class="form-group"><label>Date &amp; Time</label><input type="datetime-local" id="sessionScheduledAt"></div>
+            <div class="form-group"><label>Capacity</label><input type="number" id="sessionCapacity" placeholder="e.g. 10" min="1" max="100"></div>
+            <div class="form-group"><label>Description <span style="font-weight:400;color:#aaa;">(optional)</span></label><textarea id="sessionDescription" placeholder="What will you cover?"></textarea></div>
             <button class="btn btn-primary btn-full" onclick="createSession()">Create Session</button>
         </div>
-
-        <!-- ─── SECTION 4: My Sessions ───────────────────────────────── -->
         <div class="card">
             <h2>📅 My Sessions</h2>
-            <div id="mySessionsList">
-                <div class="spinner">Loading sessions...</div>
-            </div>
-        </div>
-
-    </div>
-
-    </div><!-- end page-dashboard -->
-
-
-    <!-- FACULTY DASHBOARD -->
-    <div class="page" id="page-faculty">
-        <div class="profile-bar">
-            <div class="avatar" id="facultyAvatarText">?</div>
-            <div class="profile-info">
-                <h3 id="facultyProfileName">-</h3>
-                <p id="facultyProfileEmail">-</p>
-            </div>
-            <div class="role-badge faculty">FACULTY</div>
-        </div>
-
-        <h3 style="margin-bottom:1rem;color:#1a1a2e;">Questions Awaiting Verification</h3>
-        <div id="facultyFeedList">
-            <div class="spinner">Loading...</div>
+            <div id="mySessionsList"><div class="spinner">Loading...</div></div>
         </div>
     </div>
 
-    <script>
-        const API = 'http://localhost:8082/api';
-        let currentUser = null;
+    <!-- BROWSE SESSIONS (Epic 4, Story 1) -->
+    <div id="tab-browse" style="display:none;">
+        <div class="card" style="padding:1.25rem 1.5rem;margin-bottom:1rem;">
+            <div style="display:flex;gap:0.75rem;flex-wrap:wrap;align-items:flex-end;">
+                <div style="flex:1;min-width:150px;">
+                    <label>Filter by Subject</label>
+                    <select id="browseSubjectFilter" onchange="loadBrowseSessions()">
+                        <option value="">All Subjects</option>
+                        <option value="MATHEMATICS">Mathematics</option><option value="PHYSICS">Physics</option>
+                        <option value="CHEMISTRY">Chemistry</option><option value="BIOLOGY">Biology</option>
+                        <option value="COMPUTER_SCIENCE">Computer Science</option><option value="DATA_STRUCTURES">Data Structures</option>
+                        <option value="ALGORITHMS">Algorithms</option><option value="DBMS">DBMS</option>
+                        <option value="OPERATING_SYSTEMS">Operating Systems</option><option value="NETWORKS">Networks</option>
+                        <option value="ENGLISH">English</option><option value="ECONOMICS">Economics</option><option value="OTHER">Other</option>
+                    </select>
+                </div>
+                <div style="flex:1;min-width:150px;">
+                    <label>Search by Tutor Name</label>
+                    <input type="text" id="browseTutorFilter" placeholder="e.g. Alice" oninput="loadBrowseSessions()">
+                </div>
+            </div>
+        </div>
+        <div id="browseSessionsList"><div class="spinner">Loading sessions...</div></div>
+    </div>
 
-        // ── Navigation ─────────────────────────────────────────────────────────────
-        function showPage(name) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById('page-' + name).classList.add('active');
-        }
+    <!-- MY BOOKINGS (Epic 4, Stories 2+3) -->
+    <div id="tab-bookings" style="display:none;">
+        <div id="myBookingsList"><div class="spinner">Loading...</div></div>
+    </div>
 
-        function setNav(loggedIn, role) {
-            const nav = document.getElementById('navLinks');
-            if (loggedIn) {
-                nav.innerHTML = `
-            <button class="nav-btn active" onclick="showPage('${role === 'FACULTY' ? 'faculty' : 'dashboard'}')">Dashboard</button>
-            <button class="nav-btn danger" onclick="logout()">Logout</button>`;
-            } else {
-                nav.innerHTML = `
-            <button class="nav-btn active" onclick="showPage('home')">Home</button>
-            <button class="nav-btn" onclick="showPage('login')">Login</button>
-            <button class="nav-btn" onclick="showPage('signup')">Sign Up</button>`;
-            }
-        }
+    <!-- LEADERBOARD (Epic 4, Story 5) -->
+    <div id="tab-leaderboard" style="display:none;">
+        <div class="card">
+            <h2>🏆 Tutor Leaderboard</h2>
+            <p style="font-size:0.85rem;color:#888;margin-bottom:1.25rem;">Tutors ranked by average student rating.</p>
+            <div id="leaderboardContent"><div class="spinner">Loading...</div></div>
+        </div>
+    </div>
 
-        function showAlert(id, msg, type) {
-            const el = document.getElementById(id);
-            el.textContent = msg;
-            el.className = 'alert show ' + type;
-            setTimeout(() => el.classList.remove('show'), 4000);
-        }
+</div><!-- /page-dashboard -->
 
-        // ── Auth ───────────────────────────────────────────────────────────────────
-        async function signup() {
-            const name = document.getElementById('signupName').value.trim();
-            const email = document.getElementById('signupEmail').value.trim();
-            const password = document.getElementById('signupPassword').value;
-            const role = document.getElementById('signupRole').value;
+<!-- FACULTY DASHBOARD -->
+<div class="page" id="page-faculty">
+    <div class="profile-bar">
+        <div class="avatar" id="facultyAvatarText">?</div>
+        <div class="profile-info"><h3 id="facultyProfileName">-</h3><p id="facultyProfileEmail">-</p></div>
+        <div class="role-badge faculty">FACULTY</div>
+    </div>
+    <h3 style="margin-bottom:1rem;color:#1a1a2e;">Questions Awaiting Verification</h3>
+    <div id="facultyFeedList"><div class="spinner">Loading...</div></div>
+</div>
 
-            if (!name || !email || !password) return showAlert('signupAlert', 'Please fill in all fields.', 'error');
-            if (password.length < 6) return showAlert('signupAlert', 'Password must be at least 6 characters.', 'error');
+<script>
+const API = 'http://localhost:8082/api';
+let currentUser = null;
+let myBookings = {}; // sessionId -> bookingId
 
-            try {
-                const res = await fetch(`${API}/auth/signup`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email, password, role })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    currentUser = data.data;
-                    afterLogin();
-                } else {
-                    showAlert('signupAlert', data.message || 'Signup failed.', 'error');
-                }
-            } catch (e) {
-                showAlert('signupAlert', 'Cannot connect to server.', 'error');
-            }
-        }
+// ── Navigation ────────────────────────────────────────────────────────────────
+function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+}
+function setNav(loggedIn, role) {
+    const nav = document.getElementById('navLinks');
+    if (loggedIn) {
+        nav.innerHTML = `<button class="nav-btn active" onclick="showPage('${role==='FACULTY'?'faculty':'dashboard'}')">Dashboard</button>
+                         <button class="nav-btn danger" onclick="logout()">Logout</button>`;
+    } else {
+        nav.innerHTML = `<button class="nav-btn active" onclick="showPage('home')">Home</button>
+                         <button class="nav-btn" onclick="showPage('login')">Login</button>
+                         <button class="nav-btn" onclick="showPage('signup')">Sign Up</button>`;
+    }
+}
+function showAlert(id, msg, type) {
+    const el = document.getElementById(id);
+    el.innerHTML = msg; el.className = 'alert show ' + type;
+    setTimeout(() => el.classList.remove('show'), 5000);
+}
 
-        async function login() {
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value;
+// ── Auth ──────────────────────────────────────────────────────────────────────
+async function signup() {
+    const name = document.getElementById('signupName').value.trim();
+    const email = document.getElementById('signupEmail').value.trim();
+    const password = document.getElementById('signupPassword').value;
+    const role = document.getElementById('signupRole').value;
+    if (!name||!email||!password) return showAlert('signupAlert','Please fill in all fields.','error');
+    if (password.length<6) return showAlert('signupAlert','Password must be at least 6 characters.','error');
+    try {
+        const res = await fetch(`${API}/auth/signup`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,password,role})});
+        const data = await res.json();
+        if (data.success) { currentUser=data.data; afterLogin(); }
+        else showAlert('signupAlert',data.message||'Signup failed.','error');
+    } catch(e) { showAlert('signupAlert','Cannot connect to server.','error'); }
+}
+async function login() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    if (!email||!password) return showAlert('loginAlert','Please fill in all fields.','error');
+    try {
+        const res = await fetch(`${API}/auth/login`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+        const data = await res.json();
+        if (data.success) { currentUser=data.data; afterLogin(); }
+        else showAlert('loginAlert',data.message||'Invalid credentials.','error');
+    } catch(e) { showAlert('loginAlert','Cannot connect to server.','error'); }
+}
+function afterLogin() {
+    setNav(true, currentUser.role);
+    if (currentUser.role === 'FACULTY') {
+        document.getElementById('facultyAvatarText').textContent = currentUser.name.charAt(0).toUpperCase();
+        document.getElementById('facultyProfileName').textContent = currentUser.name;
+        document.getElementById('facultyProfileEmail').textContent = currentUser.email;
+        loadFacultyFeed(); showPage('faculty');
+    } else {
+        document.getElementById('profileName').textContent = currentUser.name;
+        document.getElementById('profileEmail').textContent = currentUser.email;
+        document.getElementById('avatarText').textContent = currentUser.name.charAt(0).toUpperCase();
+        document.getElementById('pointsBadge').textContent = `⭐ ${currentUser.points||0} pts`;
+        document.getElementById('roleBadge').textContent = currentUser.isTutor ? 'TUTOR' : 'STUDENT';
+        loadSubjects(); loadFeed(); showPage('dashboard');
+    }
+}
+function logout() { currentUser=null; myBookings={}; setNav(false); showPage('home'); }
 
-            if (!email || !password) return showAlert('loginAlert', 'Please fill in all fields.', 'error');
+// ── Tabs ──────────────────────────────────────────────────────────────────────
+const ALL_TABS = ['feed','my','myanswers','post','tutor','browse','bookings','leaderboard'];
+function switchTab(name) {
+    ALL_TABS.forEach(t => {
+        document.getElementById('tab-'+t).style.display='none';
+        document.getElementById('tab-btn-'+t).classList.remove('active');
+    });
+    document.getElementById('tab-'+name).style.display='block';
+    document.getElementById('tab-btn-'+name).classList.add('active');
+    if (name==='feed')        loadFeed();
+    if (name==='my')          loadMyQuestions();
+    if (name==='myanswers')   loadMyAnswers();
+    if (name==='tutor')       loadSessions();
+    if (name==='browse')      loadBrowseSessions();
+    if (name==='bookings')    loadMyBookings();
+    if (name==='leaderboard') loadLeaderboard();
+}
 
-            try {
-                const res = await fetch(`${API}/auth/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    currentUser = data.data;
-                    afterLogin();
-                } else {
-                    showAlert('loginAlert', data.message || 'Invalid credentials.', 'error');
-                }
-            } catch (e) {
-                showAlert('loginAlert', 'Cannot connect to server.', 'error');
-            }
-        }
-
-        function afterLogin() {
-            setNav(true, currentUser.role);
-            if (currentUser.role === 'FACULTY') {
-                document.getElementById('facultyAvatarText').textContent = currentUser.name.charAt(0).toUpperCase();
-                document.getElementById('facultyProfileName').textContent = currentUser.name;
-                document.getElementById('facultyProfileEmail').textContent = currentUser.email;
-                loadFacultyFeed();
-                showPage('faculty');
-            } else {
-                document.getElementById('profileName').textContent = currentUser.name;
-                document.getElementById('profileEmail').textContent = currentUser.email;
-                // Show STUDENT by default
-                let displayRole = 'STUDENT';
-
-                // If backend explicitly says user is a tutor, then show TUTOR
-                if (currentUser.isTutor === true) {
-                    displayRole = 'TUTOR';
-                }
-
-                document.getElementById('roleBadge').textContent = displayRole;
-                document.getElementById('avatarText').textContent = currentUser.name.charAt(0).toUpperCase();
-                document.getElementById('pointsBadge').textContent = `⭐ ${currentUser.points || 0} pts`;
-                loadSubjects();
-                loadFeed();
-                showPage('dashboard');
-            }
-        }
-
-        function logout() {
-            currentUser = null;
-            setNav(false);
-            showPage('home');
-        }
-
-        // ── Tabs ───────────────────────────────────────────────────────────────────
-        function switchTab(name) {
-            ['feed', 'my', 'myanswers', 'post', 'tutor'].forEach(t => {
-                document.getElementById('tab-' + t).style.display = 'none';
-                document.getElementById('tab-btn-' + t).classList.remove('active');
+// ── Subjects ──────────────────────────────────────────────────────────────────
+async function loadSubjects() {
+    try {
+        const res = await fetch(`${API}/questions/subjects`,{headers:{'X-User-Email':currentUser.email}});
+        const data = await res.json();
+        if (data.success) {
+            ['subjectFilter','qSubject'].forEach(id => {
+                const el = document.getElementById(id);
+                data.data.forEach(s => el.innerHTML += `<option value="${s}">${s.replace(/_/g,' ')}</option>`);
             });
-            document.getElementById('tab-' + name).style.display = 'block';
-            document.getElementById('tab-btn-' + name).classList.add('active');
-            if (name === 'my') loadMyQuestions();
-            if (name === 'feed') loadFeed();
-            if (name === 'myanswers') loadMyAnswers();
-            if (name === 'tutor') loadSessions();
         }
+    } catch(e){}
+}
 
-        // ── Subjects ───────────────────────────────────────────────────────────────
-        async function loadSubjects() {
-            try {
-                const res = await fetch(`${API}/questions/subjects`, {
-                    headers: { 'X-User-Email': currentUser.email }
-                });
-                const data = await res.json();
-                if (data.success) {
-                    const subjects = data.data;
-                    const filterEl = document.getElementById('subjectFilter');
-                    const postEl = document.getElementById('qSubject');
-                    subjects.forEach(s => {
-                        filterEl.innerHTML += `<option value="${s}">${s.replace(/_/g, ' ')}</option>`;
-                        postEl.innerHTML += `<option value="${s}">${s.replace(/_/g, ' ')}</option>`;
-                    });
-                }
-            } catch (e) { }
-        }
-
-        // ── Feed (Student) ─────────────────────────────────────────────────────────
-        async function loadFeed() {
-            const subject = document.getElementById('subjectFilter').value;
-            const sort = document.getElementById('sortFilter').value;
-            const list = document.getElementById('feedList');
-            list.innerHTML = '<div class="spinner">Loading...</div>';
-            try {
-                let url = `${API}/questions?sortBy=${sort}`;
-                if (subject) url = `${API}/questions/subject/${subject}`;
-                const res = await fetch(url, { headers: { 'X-User-Email': currentUser.email } });
-                const data = await res.json();
-                if (data.success) renderStudentQuestions(data.data, 'feedList');
-                else list.innerHTML = '<div class="empty">Could not load questions.</div>';
-            } catch (e) {
-                list.innerHTML = '<div class="empty">Could not connect to server.</div>';
-            }
-        }
-
-        // ── My Questions ───────────────────────────────────────────────────────────
-        async function loadMyQuestions() {
-            const list = document.getElementById('myList');
-            list.innerHTML = '<div class="spinner">Loading...</div>';
-            try {
-                const res = await fetch(`${API}/questions/my`, {
-                    headers: { 'X-User-Email': currentUser.email }
-                });
-                const data = await res.json();
-                if (data.success) renderStudentQuestions(data.data, 'myList');
-                else list.innerHTML = '<div class="empty">No questions found.</div>';
-            } catch (e) {
-                list.innerHTML = '<div class="empty">Could not connect to server.</div>';
-            }
-        }
-
-        // ── My Answers ─────────────────────────────────────────────────────────────
-        async function loadMyAnswers() {
-            const list = document.getElementById('myAnswersList');
-            list.innerHTML = '<div class="spinner">Loading...</div>';
-            try {
-                const res = await fetch(`${API}/answers/my`, {
-                    headers: { 'X-User-Email': currentUser.email }
-                });
-                const data = await res.json();
-                if (data.success && data.data.length > 0) {
-                    list.innerHTML = data.data.map(a => `
-                <div class="my-answer-card ${a.verified ? 'verified-ans' : ''}">
+// ── Feed ──────────────────────────────────────────────────────────────────────
+async function loadFeed() {
+    const subject = document.getElementById('subjectFilter').value;
+    const sort = document.getElementById('sortFilter').value;
+    const list = document.getElementById('feedList');
+    list.innerHTML = '<div class="spinner">Loading...</div>';
+    try {
+        let url = `${API}/questions?sortBy=${sort}`;
+        if (subject) url = `${API}/questions/subject/${subject}`;
+        const res = await fetch(url,{headers:{'X-User-Email':currentUser.email}});
+        const data = await res.json();
+        if (data.success) renderStudentQuestions(data.data,'feedList');
+        else list.innerHTML = '<div class="empty">Could not load questions.</div>';
+    } catch(e) { list.innerHTML='<div class="empty">Could not connect to server.</div>'; }
+}
+async function loadMyQuestions() {
+    const list = document.getElementById('myList');
+    list.innerHTML = '<div class="spinner">Loading...</div>';
+    try {
+        const res = await fetch(`${API}/questions/my`,{headers:{'X-User-Email':currentUser.email}});
+        const data = await res.json();
+        if (data.success) renderStudentQuestions(data.data,'myList');
+        else list.innerHTML='<div class="empty">No questions found.</div>';
+    } catch(e){ list.innerHTML='<div class="empty">Could not connect.</div>'; }
+}
+async function loadMyAnswers() {
+    const list = document.getElementById('myAnswersList');
+    list.innerHTML = '<div class="spinner">Loading...</div>';
+    try {
+        const res = await fetch(`${API}/answers/my`,{headers:{'X-User-Email':currentUser.email}});
+        const data = await res.json();
+        if (data.success && data.data.length>0) {
+            list.innerHTML = data.data.map(a=>`
+                <div class="my-answer-card ${a.verified?'verified-ans':''}">
                     <div class="answer-text">${a.text}</div>
                     <div class="q-meta">
-                        <span class="badge ${a.verified ? 'badge-Answered' : 'badge-Pending'}">
-                            ${a.verified ? '✅ Verified' : '⏳ Awaiting Verification'}
-                        </span>
+                        <span class="badge ${a.verified?'badge-Answered':'badge-Pending'}">${a.verified?'✅ Verified':'⏳ Awaiting Verification'}</span>
                         <span class="q-date">${new Date(a.createdAt).toLocaleDateString()}</span>
                     </div>
-                </div>
-            `).join('');
-                } else {
-                    list.innerHTML = '<div class="empty">You have not submitted any answers yet.</div>';
-                }
-            } catch (e) {
-                list.innerHTML = '<div class="empty">Could not connect to server.</div>';
-            }
-        }
-
-        // ── Post Question ──────────────────────────────────────────────────────────
-        async function postQuestion() {
-            const text = document.getElementById('qText').value.trim();
-            const subject = document.getElementById('qSubject').value;
-            if (!text || !subject) return showAlert('postAlert', 'Please fill in all fields.', 'error');
-            if (text.length < 10) return showAlert('postAlert', 'Question must be at least 10 characters.', 'error');
-            try {
-                const res = await fetch(`${API}/questions`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-User-Email': currentUser.email },
-                    body: JSON.stringify({ text, subject })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    showAlert('postAlert', 'Question posted successfully!', 'success');
-                    document.getElementById('qText').value = '';
-                    document.getElementById('qSubject').value = '';
-                    setTimeout(() => switchTab('my'), 1200);
-                } else {
-                    showAlert('postAlert', data.message || 'Failed to post question.', 'error');
-                }
-            } catch (e) {
-                showAlert('postAlert', 'Cannot connect to server.', 'error');
-            }
-        }
-
-        // ── Delete Question ────────────────────────────────────────────────────────
-        async function deleteQuestion(questionId) {
-            if (!confirm('Are you sure you want to delete this question?')) return;
-            try {
-                const res = await fetch(`${API}/questions/${questionId}`, {
-                    method: 'DELETE',
-                    headers: { 'X-User-Email': currentUser.email }
-                });
-                const data = await res.json();
-                if (data.success) loadMyQuestions();
-                else alert('Error: ' + data.message);
-            } catch (e) {
-                alert('Something went wrong. Please try again.');
-            }
-        }
-
-        // ── Submit Answer ──────────────────────────────────────────────────────────
-        function toggleAnswerForm(questionId) {
-            const form = document.getElementById('answerForm-' + questionId);
-            form.style.display = form.style.display === 'none' ? 'block' : 'none';
-        }
-
-        async function submitAnswer(questionId) {
-            const textarea = document.getElementById('answerText-' + questionId);
-            const text = textarea.value.trim();
-            if (!text || text.length < 5) return alert('Please write a proper answer (min 5 characters).');
-            try {
-                const res = await fetch(`${API}/answers/${questionId}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-User-Email': currentUser.email },
-                    body: JSON.stringify({ text })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    alert('Answer submitted! It will be visible once verified by faculty.');
-                    textarea.value = '';
-                    toggleAnswerForm(questionId);
-                    loadFeed(); // refresh to show updated status
-                } else {
-                    alert('Error: ' + data.message);
-                }
-            } catch (e) {
-                alert('Something went wrong. Please try again.');
-            }
-        }
-
-        // ── Render Questions (Student View) ───────────────────────────────────────
-        function renderStudentQuestions(questions, containerId) {
-            const el = document.getElementById(containerId);
-            if (!questions || questions.length === 0) {
-                el.innerHTML = '<div class="empty">No questions found.</div>';
-                return;
-            }
-
-            el.innerHTML = questions.map(q => {
-                const isOwner = currentUser && q.postedBy.email === currentUser.email;
-                const isFeed = containerId === 'feedList';
-
-                // Delete button — only on owner's questions
-                const deleteBtn = isOwner
-                    ? `<button class="btn-delete" onclick="deleteQuestion(${q.id})">🗑 Delete</button>`
-                    : '';
-
-                // Answer button — show only in feed, only if not the owner
-                const answerBtn = (isFeed && !isOwner)
-                    ? `<button class="btn btn-secondary" style="padding:0.3rem 0.9rem;font-size:0.78rem;"
-                onclick="toggleAnswerForm(${q.id})">✏️ Answer</button>`
-                    : '';
-
-                // Inline answer form
-                const answerForm = (isFeed && !isOwner) ? `
-            <div class="answer-form" id="answerForm-${q.id}">
-                <textarea id="answerText-${q.id}" placeholder="Write your answer here..."></textarea>
-                <button class="btn btn-primary" style="padding:0.4rem 1rem;font-size:0.85rem;"
-                    onclick="submitAnswer(${q.id})">Submit Answer</button>
-            </div>` : '';
-
-                // Verified answer section — shown if question is VERIFIED
-                const verifiedSection = q.verifiedAnswer ? `
-            <div class="answer-section">
-                <h4>✅ Verified Answer</h4>
-                <div class="verified-answer">
-                    <p>${q.verifiedAnswer.text}</p>
-                    <div class="ans-meta">by ${q.verifiedAnswer.submittedBy.name} · ${new Date(q.verifiedAnswer.createdAt).toLocaleDateString()}</div>
-                </div>
-            </div>` : '';
-
-                return `
-        <div class="q-card ${q.status}">
+                </div>`).join('');
+        } else { list.innerHTML='<div class="empty">You have not submitted any answers yet.</div>'; }
+    } catch(e){ list.innerHTML='<div class="empty">Could not connect.</div>'; }
+}
+async function postQuestion() {
+    const text = document.getElementById('qText').value.trim();
+    const subject = document.getElementById('qSubject').value;
+    if (!text||!subject) return showAlert('postAlert','Please fill in all fields.','error');
+    if (text.length<10) return showAlert('postAlert','Question must be at least 10 characters.','error');
+    try {
+        const res = await fetch(`${API}/questions`,{method:'POST',headers:{'Content-Type':'application/json','X-User-Email':currentUser.email},body:JSON.stringify({text,subject})});
+        const data = await res.json();
+        if (data.success) {
+            showAlert('postAlert','Question posted successfully!','success');
+            document.getElementById('qText').value=''; document.getElementById('qSubject').value='';
+            setTimeout(()=>switchTab('my'),1200);
+        } else showAlert('postAlert',data.message||'Failed.','error');
+    } catch(e){ showAlert('postAlert','Cannot connect.','error'); }
+}
+async function deleteQuestion(id) {
+    if (!confirm('Delete this question?')) return;
+    try {
+        const res = await fetch(`${API}/questions/${id}`,{method:'DELETE',headers:{'X-User-Email':currentUser.email}});
+        const data = await res.json();
+        if (data.success) loadMyQuestions(); else alert('Error: '+data.message);
+    } catch(e){ alert('Something went wrong.'); }
+}
+function toggleAnswerForm(id) {
+    const f = document.getElementById('answerForm-'+id);
+    f.style.display = f.style.display==='none'?'block':'none';
+}
+async function submitAnswer(id) {
+    const ta = document.getElementById('answerText-'+id);
+    const text = ta.value.trim();
+    if (!text||text.length<5) return alert('Please write a proper answer (min 5 chars).');
+    try {
+        const res = await fetch(`${API}/answers/${id}`,{method:'POST',headers:{'Content-Type':'application/json','X-User-Email':currentUser.email},body:JSON.stringify({text})});
+        const data = await res.json();
+        if (data.success) { alert('Answer submitted!'); ta.value=''; toggleAnswerForm(id); loadFeed(); }
+        else alert('Error: '+data.message);
+    } catch(e){ alert('Something went wrong.'); }
+}
+function renderStudentQuestions(questions, containerId) {
+    const el = document.getElementById(containerId);
+    if (!questions||questions.length===0){ el.innerHTML='<div class="empty">No questions found.</div>'; return; }
+    el.innerHTML = questions.map(q => {
+        const isOwner = currentUser && q.postedBy.email===currentUser.email;
+        const isFeed = containerId==='feedList';
+        const deleteBtn = isOwner ? `<button class="btn btn-sm btn-delete" onclick="deleteQuestion(${q.id})">🗑 Delete</button>` : '';
+        const answerBtn = (isFeed&&!isOwner) ? `<button class="btn btn-sm btn-secondary" onclick="toggleAnswerForm(${q.id})">✏️ Answer</button>` : '';
+        const answerForm = (isFeed&&!isOwner) ? `<div class="answer-form" id="answerForm-${q.id}"><textarea id="answerText-${q.id}" placeholder="Write your answer..."></textarea><button class="btn btn-primary" style="padding:0.4rem 1rem;font-size:0.85rem;" onclick="submitAnswer(${q.id})">Submit</button></div>` : '';
+        const verifiedSection = q.verifiedAnswer ? `<div class="answer-section"><h4>✅ Verified Answer</h4><div class="verified-answer"><p>${q.verifiedAnswer.text}</p><div class="ans-meta">by ${q.verifiedAnswer.submittedBy.name} · ${new Date(q.verifiedAnswer.createdAt).toLocaleDateString()}</div></div></div>` : '';
+        return `<div class="q-card ${q.status}">
             <div class="q-text">${q.text}</div>
             <div class="q-meta">
-                <span class="badge badge-sub">${q.subject.replace(/_/g, ' ')}</span>
+                <span class="badge badge-sub">${q.subject.replace(/_/g,' ')}</span>
                 <span class="badge badge-${q.displayStatus}">${q.displayStatus}</span>
                 <span style="font-size:0.8rem;color:#aaa;">by ${q.postedBy.name}</span>
                 <span class="q-date">${new Date(q.createdAt).toLocaleDateString()}</span>
             </div>
-            <div class="q-actions">
-                ${answerBtn}
-                ${deleteBtn}
-            </div>
-            ${answerForm}
-            ${verifiedSection}
+            <div class="q-actions">${answerBtn}${deleteBtn}</div>
+            ${answerForm}${verifiedSection}
         </div>`;
-            }).join('');
-        }
+    }).join('');
+}
 
-        // ── Faculty Feed ───────────────────────────────────────────────────────────
-        async function loadFacultyFeed() {
-            const list = document.getElementById('facultyFeedList');
-            list.innerHTML = '<div class="spinner">Loading...</div>';
-            try {
-                const res = await fetch(`${API}/questions?sortBy=newest`, {
-                    headers: { 'X-User-Email': currentUser.email }
-                });
-                const data = await res.json();
-                if (data.success) renderFacultyQuestions(data.data);
-                else list.innerHTML = '<div class="empty">Could not load questions.</div>';
-            } catch (e) {
-                list.innerHTML = '<div class="empty">Could not connect to server.</div>';
-            }
-        }
-
-        async function loadAnswersForFaculty(questionId) {
-            const container = document.getElementById('facultyAnswers-' + questionId);
-            container.innerHTML = '<div class="spinner" style="padding:0.5rem;">Loading answers...</div>';
-            try {
-                const res = await fetch(`${API}/answers/${questionId}`, {
-                    headers: { 'X-User-Email': currentUser.email }
-                });
-                const data = await res.json();
-                if (data.success && data.data.length > 0) {
-                    container.innerHTML = data.data.map(a => `
-                <div class="faculty-answer-item ${a.verified ? 'verified-item' : ''}">
-                    <p>${a.text}</p>
-                    <div class="ans-meta">
-                        <span>by ${a.submittedBy.name} · ${new Date(a.createdAt).toLocaleDateString()}
-                            ${a.verified ? ' · <strong style="color:#1d9e75">✅ Verified</strong>' : ''}
-                        </span>
-                        ${!a.verified ? `<button class="btn-verify" onclick="verifyAnswer(${questionId}, ${a.id})">✅ Verify</button>` : ''}
-                    </div>
-                </div>
-            `).join('');
-                } else {
-                    container.innerHTML = '<div style="font-size:0.85rem;color:#aaa;padding:0.5rem;">No answers yet.</div>';
-                }
-            } catch (e) {
-                container.innerHTML = '<div style="color:red;font-size:0.85rem;">Could not load answers.</div>';
-            }
-        }
-
-        function toggleFacultyAnswers(questionId) {
-            const container = document.getElementById('facultyAnswers-' + questionId);
-            if (container.style.display === 'none') {
-                container.style.display = 'block';
-                loadAnswersForFaculty(questionId);
-            } else {
-                container.style.display = 'none';
-            }
-        }
-
-        async function verifyAnswer(questionId, answerId) {
-            if (!confirm('Mark this as the verified answer?')) return;
-            try {
-                const res = await fetch(`${API}/answers/${questionId}/verify`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-User-Email': currentUser.email },
-                    body: JSON.stringify({ answerId })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    alert('Answer verified! Student has been awarded 10 points.');
-                    loadFacultyFeed(); // refresh faculty view
-                } else {
-                    alert('Error: ' + data.message);
-                }
-            } catch (e) {
-                alert('Something went wrong. Please try again.');
-            }
-        }
-
-        function renderFacultyQuestions(questions) {
-            const el = document.getElementById('facultyFeedList');
-            if (!questions || questions.length === 0) {
-                el.innerHTML = '<div class="empty">No questions found.</div>';
-                return;
-            }
-            // Faculty sees all questions — they click to expand and see answers
-            el.innerHTML = questions.map(q => `
-        <div class="q-card ${q.status}">
-            <div class="q-text">${q.text}</div>
-            <div class="q-meta">
-                <span class="badge badge-sub">${q.subject.replace(/_/g, ' ')}</span>
-                <span class="badge badge-${q.displayStatus}">${q.displayStatus}</span>
-                <span style="font-size:0.8rem;color:#aaa;">by ${q.postedBy.name}</span>
-                <span class="q-date">${new Date(q.createdAt).toLocaleDateString()}</span>
-            </div>
-            <div class="q-actions">
-                <button class="btn btn-secondary" style="padding:0.3rem 0.9rem;font-size:0.78rem;"
-                    onclick="toggleFacultyAnswers(${q.id})">👁 View / Verify Answers</button>
-            </div>
-            <div id="facultyAnswers-${q.id}" style="display:none;margin-top:0.75rem;"></div>
+// ── Faculty ───────────────────────────────────────────────────────────────────
+async function loadFacultyFeed() {
+    const list = document.getElementById('facultyFeedList');
+    list.innerHTML='<div class="spinner">Loading...</div>';
+    try {
+        const res = await fetch(`${API}/questions?sortBy=newest`,{headers:{'X-User-Email':currentUser.email}});
+        const data = await res.json();
+        if (data.success) renderFacultyQuestions(data.data);
+        else list.innerHTML='<div class="empty">Could not load.</div>';
+    } catch(e){ list.innerHTML='<div class="empty">Could not connect.</div>'; }
+}
+async function loadAnswersForFaculty(qid) {
+    const c = document.getElementById('facultyAnswers-'+qid);
+    c.innerHTML='<div class="spinner" style="padding:0.5rem;">Loading...</div>';
+    try {
+        const res = await fetch(`${API}/answers/${qid}`,{headers:{'X-User-Email':currentUser.email}});
+        const data = await res.json();
+        if (data.success&&data.data.length>0) {
+            c.innerHTML = data.data.map(a=>`<div class="faculty-answer-item ${a.verified?'verified-item':''}"><p>${a.text}</p>
+                <div class="ans-meta"><span>by ${a.submittedBy.name} · ${new Date(a.createdAt).toLocaleDateString()}${a.verified?' · <strong style="color:#1d9e75">✅ Verified</strong>':''}</span>
+                ${!a.verified?`<button class="btn-verify" onclick="verifyAnswer(${qid},${a.id})">✅ Verify</button>`:''}</div></div>`).join('');
+        } else { c.innerHTML='<div style="font-size:0.85rem;color:#aaa;padding:0.5rem;">No answers yet.</div>'; }
+    } catch(e){ c.innerHTML='<div style="color:red;font-size:0.85rem;">Could not load.</div>'; }
+}
+function toggleFacultyAnswers(qid) {
+    const c = document.getElementById('facultyAnswers-'+qid);
+    if (c.style.display==='none') { c.style.display='block'; loadAnswersForFaculty(qid); }
+    else c.style.display='none';
+}
+async function verifyAnswer(qid, aid) {
+    if (!confirm('Mark this as the verified answer?')) return;
+    try {
+        const res = await fetch(`${API}/answers/${qid}/verify`,{method:'POST',headers:{'Content-Type':'application/json','X-User-Email':currentUser.email},body:JSON.stringify({answerId:aid})});
+        const data = await res.json();
+        if (data.success) { alert('Answer verified! Student awarded 10 points.'); loadFacultyFeed(); }
+        else alert('Error: '+data.message);
+    } catch(e){ alert('Something went wrong.'); }
+}
+function renderFacultyQuestions(questions) {
+    const el = document.getElementById('facultyFeedList');
+    if (!questions||questions.length===0){ el.innerHTML='<div class="empty">No questions.</div>'; return; }
+    el.innerHTML = questions.map(q=>`<div class="q-card ${q.status}">
+        <div class="q-text">${q.text}</div>
+        <div class="q-meta">
+            <span class="badge badge-sub">${q.subject.replace(/_/g,' ')}</span>
+            <span class="badge badge-${q.displayStatus}">${q.displayStatus}</span>
+            <span style="font-size:0.8rem;color:#aaa;">by ${q.postedBy.name}</span>
+            <span class="q-date">${new Date(q.createdAt).toLocaleDateString()}</span>
         </div>
-    `).join('');
-        }
+        <div class="q-actions"><button class="btn btn-sm btn-secondary" onclick="toggleFacultyAnswers(${q.id})">👁 View / Verify Answers</button></div>
+        <div id="facultyAnswers-${q.id}" style="display:none;margin-top:0.75rem;"></div>
+    </div>`).join('');
+}
 
-        // ════════════════════════════════════════════════════════════════════════════
-        // EPIC 3: Tutor Panel Functions
-        // ════════════════════════════════════════════════════════════════════════════
+// ── Epic 3: Tutor Panel ───────────────────────────────────────────────────────
+async function checkEligibility() {
+    const al = document.getElementById('eligibilityAlert');
+    al.innerHTML='Checking...'; al.className='alert show info';
+    try {
+        const res = await fetch(`${API}/tutor/eligibility`,{headers:{'X-User-Email':currentUser.email}});
+        const data = await res.json();
+        if (data.success) {
+            const r=data.data;
+            al.innerHTML = r.eligible
+                ? `✅ <strong>You are eligible!</strong><br><span style="font-weight:400;font-size:0.85rem;">${r.criteria}<br>${r.currentStatus}</span>`
+                : `❌ <strong>Not eligible yet.</strong><br><span style="font-weight:400;font-size:0.85rem;">${r.criteria}<br>${r.currentStatus}</span>`;
+            al.className = 'alert show ' + (r.eligible?'success':'error');
+        } else showAlert('eligibilityAlert',data.message||'Could not check.','error');
+    } catch(e){ showAlert('eligibilityAlert','Cannot connect.','error'); }
+}
+async function registerTutor() {
+    const gpaRaw = document.getElementById('tutorGpa').value.trim();
+    const bio = document.getElementById('tutorBio').value.trim();
+    if (!gpaRaw) return showAlert('registerTutorAlert','Please enter your GPA.','error');
+    const gpa = parseFloat(gpaRaw);
+    if (isNaN(gpa)||gpa<0||gpa>4) return showAlert('registerTutorAlert','GPA must be 0.0–4.0.','error');
+    try {
+        const res = await fetch(`${API}/tutor/register`,{method:'POST',headers:{'Content-Type':'application/json','X-User-Email':currentUser.email},body:JSON.stringify({gpa,bio})});
+        const data = await res.json();
+        if (data.success) {
+            showAlert('registerTutorAlert',`🎓 ${data.data.message||'Registered!'}`, 'success');
+            document.getElementById('roleBadge').textContent='TUTOR';
+            document.getElementById('tutorGpa').value=''; document.getElementById('tutorBio').value='';
+        } else showAlert('registerTutorAlert',data.message||'Failed.','error');
+    } catch(e){ showAlert('registerTutorAlert','Cannot connect.','error'); }
+}
+async function createSession() {
+    const topic=document.getElementById('sessionTopic').value.trim();
+    const subject=document.getElementById('sessionSubject').value;
+    const scheduledAt=document.getElementById('sessionScheduledAt').value;
+    const capacityRaw=document.getElementById('sessionCapacity').value.trim();
+    const description=document.getElementById('sessionDescription').value.trim();
+    if (!topic) return showAlert('createSessionAlert','Please enter a topic.','error');
+    if (!subject) return showAlert('createSessionAlert','Please select a subject.','error');
+    if (!scheduledAt) return showAlert('createSessionAlert','Please select a date and time.','error');
+    if (!capacityRaw) return showAlert('createSessionAlert','Please enter capacity.','error');
+    const capacity=parseInt(capacityRaw,10);
+    if (isNaN(capacity)||capacity<1||capacity>100) return showAlert('createSessionAlert','Capacity must be 1–100.','error');
+    const scheduledAtISO=new Date(scheduledAt).toISOString().slice(0,19);
+    try {
+        const res = await fetch(`${API}/tutor/sessions`,{method:'POST',headers:{'Content-Type':'application/json','X-User-Email':currentUser.email},body:JSON.stringify({topic,subject,scheduledAt:scheduledAtISO,capacity,description})});
+        const data = await res.json();
+        if (data.success) {
+            showAlert('createSessionAlert','✅ Session created!','success');
+            ['sessionTopic','sessionScheduledAt','sessionCapacity','sessionDescription'].forEach(id=>document.getElementById(id).value='');
+            document.getElementById('sessionSubject').value='';
+            loadSessions();
+        } else showAlert('createSessionAlert',data.message||'Failed.','error');
+    } catch(e){ showAlert('createSessionAlert','Cannot connect.','error'); }
+}
+async function loadSessions() {
+    const list = document.getElementById('mySessionsList');
+    list.innerHTML='<div class="spinner">Loading...</div>';
+    try {
+        const res = await fetch(`${API}/tutor/sessions/my`,{headers:{'X-User-Email':currentUser.email}});
+        const data = await res.json();
+        if (data.success) {
+            if (!data.data||data.data.length===0) { list.innerHTML='<div class="empty">No sessions created yet.</div>'; return; }
+            list.innerHTML = data.data.map(s=>{
+                const dt=new Date(s.scheduledAt);
+                return `<div class="session-card">
+                    <div class="session-info">
+                        <div class="session-topic">${s.topic}</div>
+                        <div class="session-meta">
+                            <span>📚 ${s.subject.replace(/_/g,' ')}</span>
+                            <span>🗓 ${dt.toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'})} at ${dt.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'})}</span>
+                            ${s.description?`<span>📝 ${s.description}</span>`:''}
+                        </div>
+                    </div>
+                    <div class="session-badges">
+                        <span class="badge-capacity">👥 ${s.capacity} seats</span>
+                        <span class="badge-upcoming">${s.status}</span>
+                    </div>
+                </div>`;
+            }).join('');
+        } else list.innerHTML='<div class="empty">Could not load.</div>';
+    } catch(e){ list.innerHTML='<div class="empty">Could not connect.</div>'; }
+}
 
-        // ── Story 2: Check Eligibility ────────────────────────────────────────────
-        async function checkEligibility() {
-            const alertEl = document.getElementById('eligibilityAlert');
-            // Show a spinner-style message while waiting
-            alertEl.textContent = 'Checking eligibility...';
-            alertEl.className = 'alert show';
-            alertEl.style.background = '#f0f4ff';
-            alertEl.style.color = '#7c6af7';
-            alertEl.style.borderColor = '#7c6af7';
-
-            try {
-                const res = await fetch(`${API}/tutor/eligibility`, {
-                    headers: { 'X-User-Email': currentUser.email }
-                });
-                const data = await res.json();
-
-                // Reset inline styles so .success / .error classes take full control
-                alertEl.style.background = '';
-                alertEl.style.color = '';
-                alertEl.style.borderColor = '';
-
-                if (data.success) {
-                    const r = data.data;
-                    if (r.eligible) {
-                        alertEl.innerHTML = `✅ <strong>You are eligible to become a tutor!</strong><br>
-                    <span style="font-weight:400;font-size:0.85rem;">${r.criteria}<br>${r.currentStatus}</span>`;
-                        alertEl.className = 'alert show success';
-                    } else {
-                        alertEl.innerHTML = `❌ <strong>Not eligible yet.</strong><br>
-                    <span style="font-weight:400;font-size:0.85rem;">${r.criteria}<br>${r.currentStatus}</span>`;
-                        alertEl.className = 'alert show error';
-                    }
-                } else {
-                    showAlert('eligibilityAlert', data.message || 'Could not check eligibility.', 'error');
-                }
-            } catch (e) {
-                alertEl.style.background = '';
-                alertEl.style.color = '';
-                alertEl.style.borderColor = '';
-                showAlert('eligibilityAlert', 'Cannot connect to server.', 'error');
-            }
-        }
-
-        // ── Story 1: Register as Tutor ────────────────────────────────────────────
-        async function registerTutor() {
-            const gpaRaw = document.getElementById('tutorGpa').value.trim();
-            const bio = document.getElementById('tutorBio').value.trim();
-
-            // Validation
-            if (!gpaRaw) return showAlert('registerTutorAlert', 'Please enter your GPA.', 'error');
-            const gpa = parseFloat(gpaRaw);
-            if (isNaN(gpa) || gpa < 0 || gpa > 4)
-                return showAlert('registerTutorAlert', 'GPA must be between 0.0 and 4.0.', 'error');
-
-            try {
-                const res = await fetch(`${API}/tutor/register`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-User-Email': currentUser.email
-                    },
-                    body: JSON.stringify({ gpa, bio })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    showAlert('registerTutorAlert',
-                        `🎓 ${data.data.message || 'Tutor registered successfully!'}`, 'success');
-                    // Update role badge in profile bar to reflect TUTOR role
-                    document.getElementById('roleBadge').textContent = 'TUTOR';
-                    document.getElementById('tutorGpa').value = '';
-                    document.getElementById('tutorBio').value = '';
-                } else {
-                    showAlert('registerTutorAlert', data.message || 'Registration failed.', 'error');
-                }
-            } catch (e) {
-                showAlert('registerTutorAlert', 'Cannot connect to server.', 'error');
-            }
-        }
-
-        // ── Story 3 + 4: Create Session ───────────────────────────────────────────
-        async function createSession() {
-            const topic = document.getElementById('sessionTopic').value.trim();
-            const subject = document.getElementById('sessionSubject').value;
-            const scheduledAt = document.getElementById('sessionScheduledAt').value;
-            const capacityRaw = document.getElementById('sessionCapacity').value.trim();
-            const description = document.getElementById('sessionDescription').value.trim();
-
-            // Validation
-            if (!topic)
-                return showAlert('createSessionAlert', 'Please enter a topic.', 'error');
-            if (topic.length < 3)
-                return showAlert('createSessionAlert', 'Topic must be at least 3 characters.', 'error');
-            if (!subject)
-                return showAlert('createSessionAlert', 'Please select a subject.', 'error');
-            if (!scheduledAt)
-                return showAlert('createSessionAlert', 'Please select a date and time.', 'error');
-            if (!capacityRaw)
-                return showAlert('createSessionAlert', 'Please enter a capacity.', 'error');
-
-            const capacity = parseInt(capacityRaw, 10);
-            if (isNaN(capacity) || capacity < 1 || capacity > 100)
-                return showAlert('createSessionAlert', 'Capacity must be between 1 and 100.', 'error');
-
-            // Convert datetime-local string → ISO format the backend expects
-            const scheduledAtISO = new Date(scheduledAt).toISOString().slice(0, 19);
-
-            try {
-                const res = await fetch(`${API}/tutor/sessions`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-User-Email': currentUser.email
-                    },
-                    body: JSON.stringify({ topic, subject, scheduledAt: scheduledAtISO, capacity, description })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    showAlert('createSessionAlert', '✅ Session created successfully!', 'success');
-                    // Clear form
-                    document.getElementById('sessionTopic').value = '';
-                    document.getElementById('sessionSubject').value = '';
-                    document.getElementById('sessionScheduledAt').value = '';
-                    document.getElementById('sessionCapacity').value = '';
-                    document.getElementById('sessionDescription').value = '';
-                    // Refresh the sessions list below
-                    loadSessions();
-                } else {
-                    showAlert('createSessionAlert', data.message || 'Failed to create session.', 'error');
-                }
-            } catch (e) {
-                showAlert('createSessionAlert', 'Cannot connect to server.', 'error');
-            }
-        }
-
-        // ── Story 5: View My Sessions ─────────────────────────────────────────────
-        async function loadSessions() {
-            const list = document.getElementById('mySessionsList');
-            list.innerHTML = '<div class="spinner">Loading sessions...</div>';
-            try {
-                const res = await fetch(`${API}/tutor/sessions/my`, {
-                    headers: { 'X-User-Email': currentUser.email }
-                });
-                const data = await res.json();
-                if (data.success) {
-                    renderSessions(data.data);
-                } else {
-                    list.innerHTML = '<div class="empty">Could not load sessions.</div>';
-                }
-            } catch (e) {
-                list.innerHTML = '<div class="empty">Could not connect to server.</div>';
-            }
-        }
-
-        function renderSessions(sessions) {
-            const list = document.getElementById('mySessionsList');
-            if (!sessions || sessions.length === 0) {
-                list.innerHTML = '<div class="empty">You have not created any sessions yet.</div>';
-                return;
-            }
-            list.innerHTML = sessions.map(s => {
-                const dt = new Date(s.scheduledAt);
-                const dateStr = dt.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
-                const timeStr = dt.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
-                return `
-        <div class="session-card">
-            <div class="session-info">
-                <div class="session-topic">${s.topic}</div>
-                <div class="session-meta">
-                    <span>📚 ${s.subject.replace(/_/g, ' ')}</span>
-                    <span>🗓 ${dateStr} at ${timeStr}</span>
-                    ${s.description ? `<span>📝 ${s.description}</span>` : ''}
-                </div>
+// ── Epic 4, Story 1: Browse Sessions ─────────────────────────────────────────
+async function loadBrowseSessions() {
+    const list = document.getElementById('browseSessionsList');
+    list.innerHTML='<div class="spinner">Loading sessions...</div>';
+    const subjectVal=document.getElementById('browseSubjectFilter').value;
+    const tutorVal=document.getElementById('browseTutorFilter').value.trim();
+    let url=`${API}/epic4/sessions`;
+    const params=new URLSearchParams();
+    if (subjectVal) { params.set('filterType','subjectFilter'); params.set('filterValue',subjectVal); }
+    else if (tutorVal) { params.set('filterType','tutorFilter'); params.set('filterValue',tutorVal); }
+    if ([...params].length) url+='?'+params.toString();
+    try {
+        const res=await fetch(url,{headers:{'X-User-Email':currentUser.email}});
+        if (!res.ok) throw new Error('Server error '+res.status);
+        const sessions=await res.json();
+        renderBrowseSessions(Array.isArray(sessions)?sessions:[]);
+    } catch(e){ list.innerHTML='<div class="empty">Could not load sessions.<br><small>'+e.message+'</small></div>'; }
+}
+function renderBrowseSessions(sessions) {
+    const list=document.getElementById('browseSessionsList');
+    if (!sessions||sessions.length===0){ list.innerHTML='<div class="empty">No upcoming sessions found.</div>'; return; }
+    list.innerHTML=sessions.map(s=>{
+        const dt=new Date(s.scheduledAt);
+        const dateStr=dt.toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'});
+        const timeStr=dt.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
+        const full=s.availableSlots<=0;
+        const alreadyBooked=myBookings[s.sessionId]!==undefined;
+        let actionBtn='';
+        if (alreadyBooked) actionBtn=`<span class="badge badge-booked">✅ Booked</span>`;
+        else if (!full) actionBtn=`<button class="btn btn-sm btn-book" onclick="bookSession(${s.sessionId})">📌 Book</button>`;
+        else actionBtn=`<span style="font-size:0.8rem;color:#e24b4a;font-weight:600;">Full</span>`;
+        return `<div class="browse-card">
+            <div class="bc-title">${s.topic} <span class="badge badge-${s.status}" style="font-size:0.72rem;">${s.status}</span></div>
+            <div class="bc-meta">
+                <span>📚 ${s.subject.replace(/_/g,' ')}</span>
+                <span>👤 ${s.tutorName}</span>
+                <span>🗓 ${dateStr} at ${timeStr}</span>
             </div>
-            <div class="session-badges">
-                <span class="badge-capacity">👥 ${s.capacity} seats</span>
-                <span class="badge-upcoming">${s.status}</span>
+            <div class="bc-footer">
+                <span class="${full?'slots-full':'slots-info'}">${full?'No slots left':`${s.availableSlots} of ${s.capacity} slots available`}</span>
+                <div style="display:flex;gap:0.5rem;">${actionBtn}</div>
             </div>
         </div>`;
-            }).join('');
-        }
-    </script>
-</body>
+    }).join('');
+}
 
+// ── Epic 4, Story 2: Book Session ─────────────────────────────────────────────
+async function bookSession(sessionId) {
+    if (!currentUser.id) return alert('User ID missing. Please log out and log back in.');
+    try {
+        const res=await fetch(`${API}/epic4/sessions/${sessionId}/bookings`,{
+            method:'POST',
+            headers:{'Content-Type':'application/json','X-User-Email':currentUser.email},
+            body:JSON.stringify({studentId:currentUser.id})
+        });
+        if (!res.ok) {
+            const err=await res.json().catch(()=>({}));
+            return alert('Booking failed: '+(err.message||res.statusText));
+        }
+        const booking=await res.json();
+        myBookings[sessionId]=booking.bookingId;
+        alert(`✅ Booked "${booking.sessionTopic}" successfully!`);
+        loadBrowseSessions();
+    } catch(e){ alert('Could not complete booking. Check your connection.'); }
+}
+
+// ── Epic 4, Story 3: My Bookings + Attendance ────────────────────────────────
+async function loadMyBookings() {
+    const list=document.getElementById('myBookingsList');
+    list.innerHTML='<div class="spinner">Loading...</div>';
+    try {
+        const res=await fetch(`${API}/epic4/sessions`,{headers:{'X-User-Email':currentUser.email}});
+        if (!res.ok) throw new Error('Server error');
+        const sessions=await res.json();
+        if (!Array.isArray(sessions)||sessions.length===0){ list.innerHTML='<div class="empty">No sessions available yet.</div>'; return; }
+        // For each session check if this user has a booking
+        const checks=sessions.map(s=>
+            fetch(`${API}/epic4/sessions/${s.sessionId}/bookings`,{headers:{'X-User-Email':currentUser.email}})
+                .then(r=>r.json())
+                .then(bookings=>{
+                    if (!Array.isArray(bookings)) return null;
+                    const mine=bookings.find(b=>b.studentName===currentUser.name);
+                    if (mine){ myBookings[s.sessionId]=mine.bookingId; return {session:s,booking:mine}; }
+                    return null;
+                }).catch(()=>null)
+        );
+        const results=(await Promise.all(checks)).filter(Boolean);
+        renderMyBookings(results);
+    } catch(e){ list.innerHTML='<div class="empty">Could not load bookings.</div>'; }
+}
+function renderMyBookings(items) {
+    const list=document.getElementById('myBookingsList');
+    if (!items||items.length===0){
+        list.innerHTML='<div class="empty">No bookings yet.<br><br><button class="btn btn-primary" onclick="switchTab(\'browse\')">Browse Sessions →</button></div>'; return;
+    }
+    list.innerHTML=items.map(({session:s,booking:b})=>{
+        const dt=new Date(s.scheduledAt);
+        const dateStr=dt.toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+        const timeStr=dt.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
+        const canAttend=!b.attended&&s.status==='UPCOMING';
+        const canRate=b.attended;
+        return `<div class="booking-card ${b.attended?'attended':''}">
+            <div class="bk-title">${s.topic}</div>
+            <div class="bk-meta">
+                <span>📚 ${s.subject.replace(/_/g,' ')}</span>
+                <span>👤 ${s.tutorName}</span>
+                <span>🗓 ${dateStr} at ${timeStr}</span>
+                <span>${b.attended?'✅ Attended':'⏳ Not yet attended'}</span>
+            </div>
+            <div class="bk-actions">
+                ${canAttend?`<button class="btn btn-sm btn-attend" onclick="markAttendance(${s.sessionId},${b.bookingId})">✋ Mark Attendance</button>`:''}
+                ${canRate?`<button class="btn btn-sm btn-secondary" onclick="toggleRateForm('rate-${b.bookingId}')">⭐ Rate Session</button>`:''}
+            </div>
+            ${canRate?`<div class="rate-form" id="rate-${b.bookingId}">
+                <p style="font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;">Your rating:</p>
+                <div class="star-row" id="stars-${b.bookingId}">
+                    ${[1,2,3,4,5].map(n=>`<span class="star" onclick="selectStar('${b.bookingId}',${n})" data-val="${n}">★</span>`).join('')}
+                </div>
+                <input type="hidden" id="starVal-${b.bookingId}" value="0">
+                <div class="form-group" style="margin-top:0.5rem;">
+                    <textarea id="feedback-${b.bookingId}" placeholder="Optional feedback..." style="min-height:60px;"></textarea>
+                </div>
+                <button class="btn btn-primary" style="padding:0.4rem 1rem;font-size:0.85rem;" onclick="submitRating(${s.sessionId},${b.bookingId})">Submit Rating</button>
+            </div>`:''}
+        </div>`;
+    }).join('');
+}
+
+// ── Epic 4, Story 3: Mark Attendance ─────────────────────────────────────────
+async function markAttendance(sessionId, bookingId) {
+    if (!confirm('Mark yourself as attended?')) return;
+    try {
+        const res=await fetch(`${API}/epic4/sessions/${sessionId}/bookings/attend`,{
+            method:'PATCH',
+            headers:{'Content-Type':'application/json','X-User-Email':currentUser.email},
+            body:JSON.stringify({studentId:currentUser.id})
+        });
+        if (!res.ok){ const err=await res.json().catch(()=>{}); return alert('Error: '+(err&&err.message||res.statusText)); }
+        alert('✅ Attendance marked!');
+        loadMyBookings();
+    } catch(e){ alert('Could not mark attendance.'); }
+}
+
+// ── Epic 4, Story 4: Rate Session ─────────────────────────────────────────────
+function toggleRateForm(id) {
+    document.getElementById(id).classList.toggle('open');
+}
+function selectStar(bookingId, val) {
+    document.getElementById('starVal-'+bookingId).value=val;
+    document.querySelectorAll(`#stars-${bookingId} .star`).forEach(s=>{
+        s.classList.toggle('selected', parseInt(s.dataset.val)<=val);
+    });
+}
+async function submitRating(sessionId, bookingId) {
+    const score=parseInt(document.getElementById('starVal-'+bookingId).value);
+    const feedback=document.getElementById('feedback-'+bookingId).value.trim();
+    if (!score||score<1) return alert('Please select a star rating (1–5).');
+    try {
+        const res=await fetch(`${API}/epic4/sessions/${sessionId}/ratings`,{
+            method:'POST',
+            headers:{'Content-Type':'application/json','X-User-Email':currentUser.email},
+            body:JSON.stringify({studentId:currentUser.id,score,feedback})
+        });
+        if (!res.ok){ const err=await res.json().catch(()=>{}); return alert('Rating error: '+(err&&err.message||res.statusText)); }
+        alert('⭐ Rating submitted! Thank you.');
+        loadMyBookings(); loadLeaderboard();
+    } catch(e){ alert('Could not submit rating.'); }
+}
+
+// ── Epic 4, Story 5: Leaderboard ──────────────────────────────────────────────
+async function loadLeaderboard() {
+    const el=document.getElementById('leaderboardContent');
+    el.innerHTML='<div class="spinner">Loading...</div>';
+    try {
+        const res=await fetch(`${API}/epic4/leaderboard`,{headers:{'X-User-Email':currentUser.email}});
+        if (!res.ok) throw new Error('Server error');
+        const entries=await res.json();
+        if (!entries||entries.length===0){ el.innerHTML='<div class="empty">No ratings yet. Rate a session to see the leaderboard!</div>'; return; }
+        const medals=['🥇','🥈','🥉'];
+        el.innerHTML=`<table class="lb-table">
+            <thead><tr><th>Rank</th><th>Tutor</th><th>Rating</th><th>Total Reviews</th></tr></thead>
+            <tbody>${entries.map(e=>`<tr>
+                <td><strong>${medals[e.rank-1]||'#'+e.rank}</strong></td>
+                <td><strong>${e.tutorName}</strong><br><span style="font-size:0.78rem;color:#aaa;">${e.tutorEmail}</span></td>
+                <td><span class="star-display">${'★'.repeat(Math.round(e.averageRating))}${'☆'.repeat(5-Math.round(e.averageRating))}</span> <strong>${e.averageRating.toFixed(1)}</strong></td>
+                <td>${e.totalRatings} rating${e.totalRatings!==1?'s':''}</td>
+            </tr>`).join('')}</tbody>
+        </table>`;
+    } catch(e){ el.innerHTML='<div class="empty">Could not load leaderboard.</div>'; }
+}
+</script>
+</body>
 </html>
