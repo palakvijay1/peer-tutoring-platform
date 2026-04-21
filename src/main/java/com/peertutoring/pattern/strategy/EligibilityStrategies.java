@@ -23,17 +23,17 @@ import org.springframework.stereotype.Component;
 @Component("gpaEligibilityStrategy")
 class GpaEligibilityStrategy implements EligibilityStrategy {
 
-    private static final double MIN_GPA = 3.0;
+    private static final double MIN_CGPA = 6.5; // 10.0 scale
 
     @Override
     public boolean isEligible(User user, TutorProfile profile) {
-        // GPA must be at or above the minimum threshold
-        return profile.getGpa() >= MIN_GPA;
+        // CGPA must be strictly above 6.5 (on a 10.0 scale)
+        return profile.getGpa() > MIN_CGPA;
     }
 
     @Override
     public String getEligibilityCriteria() {
-        return "GPA must be at least " + MIN_GPA + " out of 4.0";
+        return "CGPA must be above " + MIN_CGPA + " out of 10.0";
     }
 }
 
@@ -47,7 +47,7 @@ class GpaEligibilityStrategy implements EligibilityStrategy {
 @Component("pointsEligibilityStrategy")
 class PointsEligibilityStrategy implements EligibilityStrategy {
 
-    private static final int MIN_POINTS = 50;
+    private static final int MIN_POINTS = 20;
 
     @Override
     public boolean isEligible(User user, TutorProfile profile) {

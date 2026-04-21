@@ -38,6 +38,11 @@ public class RatingService {
         User student = userRepository.findById(request.getStudentId())
                 .orElseThrow(() -> new RuntimeException("Student not found: " + request.getStudentId()));
 
+        // Prevent a tutor from rating their own session
+        if (session.getTutor().getId().equals(student.getId())) {
+            throw new RuntimeException("Tutors cannot rate their own sessions.");
+        }
+
         // Student must have a booking and must have attended
         var booking = bookingRepository.findBySessionAndStudent(session, student)
                 .orElseThrow(() -> new RuntimeException("You must book the session before rating."));

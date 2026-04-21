@@ -237,13 +237,13 @@
         <div class="card">
             <h2>🔍 Check Eligibility</h2>
             <div class="alert" id="eligibilityAlert"></div>
-            <p style="font-size:0.88rem;color:#666;margin-bottom:1rem;">Requirements: GPA &ge; 3.0 and 50+ platform points.</p>
+            <p style="font-size:0.88rem;color:#666;margin-bottom:1rem;">Requirements: CGPA &gt; 6.5 (out of 10.0) and more than 20 platform points.</p>
             <button class="btn btn-secondary" onclick="checkEligibility()">Check My Eligibility</button>
         </div>
         <div class="card">
             <h2>📝 Register as Tutor</h2>
             <div class="alert" id="registerTutorAlert"></div>
-            <div class="form-group"><label>GPA (0.0 – 4.0)</label><input type="number" id="tutorGpa" placeholder="e.g. 3.5" min="0" max="4" step="0.1"></div>
+            <div class="form-group"><label>CGPA (0.0 – 10.0)</label><input type="number" id="tutorGpa" placeholder="e.g. 7.5" min="0" max="10" step="0.1"></div>
             <div class="form-group"><label>Bio <span style="font-weight:400;color:#aaa;">(optional)</span></label><textarea id="tutorBio" placeholder="Your expertise..."></textarea></div>
             <button class="btn btn-primary btn-full" onclick="registerTutor()">Register as Tutor</button>
         </div>
@@ -608,9 +608,10 @@ async function checkEligibility() {
 async function registerTutor() {
     const gpaRaw = document.getElementById('tutorGpa').value.trim();
     const bio = document.getElementById('tutorBio').value.trim();
-    if (!gpaRaw) return showAlert('registerTutorAlert','Please enter your GPA.','error');
+    if (!gpaRaw) return showAlert('registerTutorAlert','Please enter your CGPA.','error');
     const gpa = parseFloat(gpaRaw);
-    if (isNaN(gpa)||gpa<0||gpa>4) return showAlert('registerTutorAlert','GPA must be 0.0–4.0.','error');
+    if (isNaN(gpa)||gpa<0||gpa>10) return showAlert('registerTutorAlert','CGPA must be between 0.0 and 10.0.','error');
+    if (gpa <= 6.5) return showAlert('registerTutorAlert','❌ Your CGPA must be above 6.5 to register as a tutor.','error');
     try {
         const res = await fetch(`${API}/tutor/register`,{method:'POST',headers:{'Content-Type':'application/json','X-User-Email':currentUser.email},body:JSON.stringify({gpa,bio})});
         const data = await res.json();
@@ -701,8 +702,10 @@ function renderBrowseSessions(sessions) {
         const timeStr=dt.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
         const full=s.availableSlots<=0;
         const alreadyBooked=myBookings[s.sessionId]!==undefined;
+        const isOwnSession=currentUser && s.tutorEmail===currentUser.email;
         let actionBtn='';
-        if (alreadyBooked) actionBtn=`<span class="badge badge-booked">✅ Booked</span>`;
+        if (isOwnSession) actionBtn=`<span style="font-size:0.8rem;color:#888;font-style:italic;">Your session</span>`;
+        else if (alreadyBooked) actionBtn=`<span class="badge badge-booked">✅ Booked</span>`;
         else if (!full) actionBtn=`<button class="btn btn-sm btn-book" onclick="bookSession(${s.sessionId})">📌 Book</button>`;
         else actionBtn=`<span style="font-size:0.8rem;color:#e24b4a;font-weight:600;">Full</span>`;
         return `<div class="browse-card">
@@ -774,7 +777,8 @@ function renderMyBookings(items) {
         const dateStr=dt.toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short',year:'numeric'});
         const timeStr=dt.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
         const canAttend=!b.attended&&s.status==='UPCOMING';
-        const canRate=b.attended;
+        const isOwnSession=currentUser && s.tutorEmail===currentUser.email;
+        const canRate=b.attended && !isOwnSession;
         return `<div class="booking-card ${b.attended?'attended':''}">
             <div class="bk-title">${s.topic}</div>
             <div class="bk-meta">

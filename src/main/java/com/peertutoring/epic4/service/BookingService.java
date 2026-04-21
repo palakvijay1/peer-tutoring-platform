@@ -37,6 +37,11 @@ public class BookingService {
         User student = userRepository.findById(request.getStudentId())
                 .orElseThrow(() -> new RuntimeException("Student not found: " + request.getStudentId()));
 
+        // Prevent a tutor from booking their own session
+        if (session.getTutor().getId().equals(student.getId())) {
+            throw new RuntimeException("Tutors cannot book their own sessions.");
+        }
+
         if (bookingRepository.existsBySessionAndStudent(session, student)) {
             throw new RuntimeException("You have already booked this session.");
         }

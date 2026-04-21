@@ -195,9 +195,9 @@ public class Dtos {
      */
     @Data @NoArgsConstructor @AllArgsConstructor @Builder
     public static class RegisterAsTutorRequest {
-        @DecimalMin(value = "0.0", message = "GPA cannot be negative")
-        @DecimalMax(value = "4.0", message = "GPA cannot exceed 4.0")
-        private double gpa;
+        @DecimalMin(value = "0.0", message = "CGPA cannot be negative")
+        @DecimalMax(value = "10.0", message = "CGPA cannot exceed 10.0")
+        private double gpa; // CGPA on 10.0 scale; must be > 6.5 to register
 
         @Size(max = 500, message = "Bio cannot exceed 500 characters")
         private String bio;

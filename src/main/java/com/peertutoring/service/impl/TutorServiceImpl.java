@@ -155,6 +155,21 @@ public class TutorServiceImpl implements TutorService {
                     "A tutor profile already exists for this account.");
         }
 
+        // STEP 3b — CGPA eligibility gate: must be > 6.5 on a 10.0 scale
+        // GRASP Information Expert: service enforces eligibility business rule
+        if (request.getGpa() <= 6.5) {
+            throw new ResourceNotFoundException(
+                    "❌ Eligibility check failed: Your CGPA (" + request.getGpa() +
+                    ") must be above 6.5 out of 10.0 to register as a tutor.");
+        }
+
+        // STEP 3c — Points eligibility gate: must have more than 20 platform points
+        if (user.getPoints() <= 20) {
+            throw new ResourceNotFoundException(
+                    "❌ Eligibility check failed: You need more than 20 platform points to register as a tutor. " +
+                    "Current points: " + user.getPoints() + ". Answer questions to earn points!");
+        }
+
         // STEP 4 — Build TutorProfile using Builder pattern (consistent with teammates)
         TutorProfile profile = TutorProfile.builder()
                 .user(user)

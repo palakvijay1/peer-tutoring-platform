@@ -69,9 +69,9 @@ public class AnswerServiceImpl implements AnswerService {
         // STEP 1 — Get the student submitting the answer
         User student = getUser(email);
 
-        // STEP 2 — Only STUDENT role can submit answers
-        if (student.getRole() != User.Role.STUDENT) {
-            throw new ResourceNotFoundException("Only students can submit answers.");
+        // STEP 2 — Only STUDENT or TUTOR role can submit answers (not FACULTY)
+        if (student.getRole() == User.Role.FACULTY) {
+            throw new ResourceNotFoundException("Faculty members cannot submit answers. Use the verify feature instead.");
         }
 
         // STEP 3 — Get the question
