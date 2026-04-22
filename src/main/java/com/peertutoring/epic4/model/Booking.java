@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
  *
  * SOLID — SRP: Only holds booking state data.
  *   All booking logic (capacity check, duplicate check) lives in BookingService.
+ * entire class holds data it has no methods,no logic,no conditions it just reoresents state of a booking
  * ══════════════════════════════════════════════════════════════
  */
 @Entity

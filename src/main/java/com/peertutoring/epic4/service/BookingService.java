@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+//factory pattern and repository pattern(abstracts db access)
 
 @Service
 @RequiredArgsConstructor

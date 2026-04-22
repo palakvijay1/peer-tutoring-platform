@@ -18,6 +18,8 @@ public class LeaderboardService {
      * Story 5: Returns tutors ranked by average rating (descending).
      * The leaderboard is already kept up-to-date by LeaderboardUpdater
      * (Observer) — this method just reads and returns the current state.
+     * DIP -HIGH MODULES DEPENDS ON LOW LEVEL MODULES BOTH DEPEND ON ABSTRACTIONS
+     * DEPENDS ON ABSTRACTION , NOT DB
      */
     public List<LeaderboardResponse> getLeaderboard() {
         return leaderboardRepository

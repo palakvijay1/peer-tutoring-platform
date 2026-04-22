@@ -11,6 +11,11 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
+ * OBSERVER PATTERN
+ * decouples rating submission from leaderboard updates
+ * SRP
+ * 
+ * listends to rating submission and updates leaderboard
  * Concrete Observer — recomputes leaderboard whenever any tutor
  * receives a new rating. Registered automatically by Spring as a
  * RatingEventObserver bean — RatingService never imports this class.

@@ -6,7 +6,14 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/** Returns all sessions unchanged — used when no filter is selected. */
+/** Returns all sessions unchanged — used when no filter is selected. 
+ * All classes:
+
+Implement SAME method
+But DIFFERENT logic
+
+👉 That’s exactly Strategy Pattern ✔️
+*/
 @Component("noFilter")
 class NoFilterStrategy implements SessionFilterStrategy {
     @Override

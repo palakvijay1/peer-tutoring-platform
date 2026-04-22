@@ -11,6 +11,13 @@ import lombok.*;
  * Stores the computed ranking for each tutor.
  * Automatically updated by the LeaderboardObserver whenever
  * a new SessionRating is submitted.
+ * 
+ * OBSERVER PATTERN(BEHAVIORAL) UPDATES THIS
+ * THIS IS NOT THE OBSERVER ITSELF THIS CLASS IS THE DATA MODEL UPDATED BY
+ * THE OBSERVER
+ * 
+ * SRP ONLY STORES LEADERBOARD DATA DOES NOT CALC RATINGS ETC
+ * CLEAR SEPERATION OF RESPONSIBILITY
  *
  * One row per tutor — upserted (not inserted) on every rating event.
  * ══════════════════════════════════════════════════════════════

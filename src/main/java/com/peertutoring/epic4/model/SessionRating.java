@@ -13,7 +13,9 @@ import java.time.LocalDateTime;
  * A student submits a 1-5 rating + optional feedback for a session
  * they attended. The rating is stored and triggers a leaderboard update
  * via the Observer pattern.
- *
+ * 
+ * OBSERVER PATTERNS EVENT DATA TRIGGERS LEADERBOARD UPDATE WHEN NEW RATING IS CREATED
+ SRP STORES RATING DATA NO LEADERBOARD CALC
  * Named "SessionRating" (not "Rating") to avoid any clash with
  * teammates' potential use of a generic Rating name.
  * ══════════════════════════════════════════════════════════════

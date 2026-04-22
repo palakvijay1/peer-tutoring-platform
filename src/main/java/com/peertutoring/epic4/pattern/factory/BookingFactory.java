@@ -28,10 +28,17 @@ import org.springframework.stereotype.Component;
  *   If Booking gains new fields (e.g., meetingLink, reminderSent),
  *   only BookingFactory changes — not BookingService.
  *
+ * FACTORY PATTERN- centralized obj creation
+ * SRP - factory handles only creation
+ * LOW coupling service independent of creation
+ * builder - clean obj contruction
+ * 
+ * 
  * WHERE used:
  *   BookingService.bookSession() delegates construction here.
  * ══════════════════════════════════════════════════════════════
  */
+
 @Component
 public class BookingFactory {
 

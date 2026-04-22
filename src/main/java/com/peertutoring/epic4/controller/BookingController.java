@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
+ * MVC
  * Story 2 — Book Session       POST /api/epic4/sessions/{id}/bookings
  * Story 3 — Attend Session  PATCH /api/epic4/sessions/{id}/bookings/attend
  */
